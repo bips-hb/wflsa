@@ -160,7 +160,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     alpha_old2 = Rcpp::clone(alpha_old1) ; 
     alpha_old1 = Rcpp::clone(alpha_new) ; 
     
-    //Rcpp::DoubleVector beta_new (m) ;
+    Rcpp::DoubleVector beta_new (m) ;
     Rcpp::DoubleVector alpha_new (c) ; 
     
     Rcpp::DoubleVector delta (m) ; // aux. vector for beta-update step
