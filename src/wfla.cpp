@@ -39,7 +39,7 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y, 
+Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y, 
                                 const Rcpp::NumericMatrix& W, 
                                 const int m, 
                                 const int c, 
@@ -57,15 +57,15 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
   double C = 1 / (1 + a) ; 
   
   /* initialize vectors for beta-update step in the ADMM */
-  Rcpp::NumericVector beta_new (m) ; // beta^(k + 1)
-  Rcpp::NumericVector beta_old (m) ; // beta^k
-  Rcpp::NumericVector delta (m) ; // aux. vector for beta-update step
+  Rcpp::DoubleVector beta_new (m) ; // beta^(k + 1)
+  Rcpp::DoubleVector beta_old (m) ; // beta^k
+  Rcpp::DoubleVector delta (m) ; // aux. vector for beta-update step
   
   /* initialize vectors for alpha-update step in the ADMM */
-  Rcpp::NumericVector alpha_new (c) ; 
-  Rcpp::NumericVector alpha_old1 (c) ;
-  Rcpp::NumericVector alpha_old2 (c) ;
-  Rcpp::NumericVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
+  Rcpp::DoubleVector alpha_new (c) ; 
+  Rcpp::DoubleVector alpha_old1 (c) ;
+  Rcpp::DoubleVector alpha_old2 (c) ;
+  Rcpp::DoubleVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
   
   /* Indices used for the alpha-update step */
   Rcpp::IntegerVector steps (m-1) ; 
@@ -91,7 +91,7 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
     //delta = eta1 * alpha ; 
-    //Rcpp::NumericVector delta (m) ;
+    //Rcpp::DoubleVector delta (m) ;
     
     for (i = 0; i < m; i++) { 
       delta[i] = eta1 * alpha[i] ;  
@@ -104,10 +104,10 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
         delta[i] = delta[i] - eta2*W(j,i)*alpha[m + steps[j] - (j - i) - 1] ; 
       }
     }
-
+    
     // update beta with the computed delta and determine difference
-    //Rcpp::NumericVector beta_new (m) ;
-    // Rcpp::NumericVector beta_new (m) ;
+    //Rcpp::DoubleVector beta_new (m) ;
+    // Rcpp::DoubleVector beta_new (m) ;
     beta_new = C*(a*beta_old + y - delta) ; 
     diff = sum(abs(beta_new - beta_old)) ; 
     // diff = 0 ;
@@ -129,12 +129,12 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     
     /* --------- alpha update step ----------- */
     //alpha_new = Rcpp::clone(alpha_old1) + rho * eta1 * Rcpp::clone(beta_new) ; 
-    // Rcpp::NumericVector alpha_new (c) ; // TODO change back
+    // Rcpp::DoubleVector alpha_new (c) ; // TODO change back
     //alpha_new = Rcpp::clone(alpha_old1) ; 
     for (i = 0; i < m; i++) {
       alpha_new[i] = alpha_old1[i] + rho * eta1 * beta_new[i] ;
     }
-
+    
     k = m; 
     // go over all unique pairs (i,j)
     for (i = 0; i < m-1; i++) { 
@@ -160,11 +160,11 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     alpha_old2 = Rcpp::clone(alpha_old1) ; 
     alpha_old1 = Rcpp::clone(alpha_new) ; 
     
-    //Rcpp::NumericVector beta_new (m) ;
-    Rcpp::NumericVector alpha_new (c) ; 
+    //Rcpp::DoubleVector beta_new (m) ;
+    Rcpp::DoubleVector alpha_new (c) ; 
     
-    Rcpp::NumericVector delta (m) ; // aux. vector for beta-update step
-    Rcpp::NumericVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
+    Rcpp::DoubleVector delta (m) ; // aux. vector for beta-update step
+    Rcpp::DoubleVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
     
     
     iter ++; 
