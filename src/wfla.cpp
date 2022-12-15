@@ -62,7 +62,7 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
   Rcpp::NumericVector delta (m) ; // aux. vector for beta-update step
   
   /* initialize vectors for alpha-update step in the ADMM */
-  //Rcpp::NumericVector alpha_new (c) ; 
+  Rcpp::NumericVector alpha_new (c) ; 
   Rcpp::NumericVector alpha_old1 (c) ;
   Rcpp::NumericVector alpha_old2 (c) ;
   Rcpp::NumericVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
@@ -91,6 +91,8 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
     //delta = eta1 * alpha ; 
+    //Rcpp::NumericVector delta (m) ;
+    
     for (i = 0; i < m; i++) { 
       delta[i] = eta1 * alpha[i] ;  
       
@@ -105,6 +107,7 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
 
     // update beta with the computed delta and determine difference
     //Rcpp::NumericVector beta_new (m) ;
+    // Rcpp::NumericVector beta_new (m) ;
     beta_new = C*(a*beta_old + y - delta) ; 
     diff = sum(abs(beta_new - beta_old)) ; 
     // diff = 0 ;
@@ -126,7 +129,7 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     
     /* --------- alpha update step ----------- */
     //alpha_new = Rcpp::clone(alpha_old1) + rho * eta1 * Rcpp::clone(beta_new) ; 
-    Rcpp::NumericVector alpha_new (c) ; 
+    // Rcpp::NumericVector alpha_new (c) ; // TODO change back
     //alpha_new = Rcpp::clone(alpha_old1) ; 
     for (i = 0; i < m; i++) {
       alpha_new[i] = alpha_old1[i] + rho * eta1 * beta_new[i] ;
@@ -156,6 +159,9 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     beta_old   = Rcpp::clone(beta_new) ; 
     alpha_old2 = Rcpp::clone(alpha_old1) ; 
     alpha_old1 = Rcpp::clone(alpha_new) ; 
+    
+    Rcpp::NumericVector beta_new (m) ;
+    Rcpp::NumericVector alpha_new (c) ; 
     
     iter ++; 
   }
