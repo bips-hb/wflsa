@@ -160,7 +160,7 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     alpha_old2 = Rcpp::clone(alpha_old1) ; 
     alpha_old1 = Rcpp::clone(alpha_new) ; 
     
-    Rcpp::NumericVector beta_new (m) ;
+    //Rcpp::NumericVector beta_new (m) ;
     Rcpp::NumericVector alpha_new (c) ; 
     
     Rcpp::NumericVector delta (m) ; // aux. vector for beta-update step
