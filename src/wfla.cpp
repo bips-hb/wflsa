@@ -163,6 +163,10 @@ Rcpp::NumericVector genlassoRcpp(Rcpp::NumericVector y,
     Rcpp::NumericVector beta_new (m) ;
     Rcpp::NumericVector alpha_new (c) ; 
     
+    Rcpp::NumericVector delta (m) ; // aux. vector for beta-update step
+    Rcpp::NumericVector alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
+    
+    
     iter ++; 
   }
   
