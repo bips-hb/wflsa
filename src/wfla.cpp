@@ -39,7 +39,7 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y, 
+Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector& y, 
                                 const Rcpp::NumericMatrix& W, 
                                 const int m, 
                                 const int c, 
@@ -84,10 +84,10 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
   while (iter < max_iter) { 
     
     /* ------- beta-update step ---------*/
-    alpha = 2*alpha_old1 - alpha_old2 ; 
-    // for (i = 0; i < c; i++) {
-    //   alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
-    // }
+    //alpha = 2*alpha_old1 - alpha_old2 ; 
+    for (i = 0; i < c; i++) {
+      alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
+    }
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
     //delta = eta1 * alpha ; 
@@ -108,13 +108,13 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     // update beta with the computed delta and determine difference
     //Rcpp::DoubleVector beta_new (m) ;
     // Rcpp::DoubleVector beta_new (m) ;
-    beta_new = C*(a*beta_old + y - delta) ; 
-    diff = sum(abs(beta_new - beta_old)) ; 
-    // diff = 0 ;
-    // for (i = 0; i < m; i ++) {
-    //   beta_new[i] = C*(a*beta_old[i] + y[i] - delta[i]) ;
-    //   diff += abs(beta_new[i] - beta_old[i]) ;
-    // }
+    //beta_new = C*(a*beta_old + y - delta) ; 
+    //diff = sum(abs(beta_new - beta_old)) ; 
+    diff = 0 ;
+    for (i = 0; i < m; i ++) {
+      beta_new[i] = C*(a*beta_old[i] + y[i] - delta[i]) ;
+      diff += abs(beta_new[i] - beta_old[i]) ;
+    }
     
     // determine whether converged or not
     if (diff < eps) { 
