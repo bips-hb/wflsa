@@ -39,8 +39,8 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector& y, 
-                                const Rcpp::NumericMatrix& W, 
+Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y, 
+                                const Rcpp::NumericMatrix W, 
                                 const int m, 
                                 const int c, 
                                 const double eta1, 
