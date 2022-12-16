@@ -39,8 +39,8 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y, 
-                                const Rcpp::NumericMatrix& W, 
+Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y, 
+                                const Rcpp::NumericMatrix W, 
                                 const size_t m, 
                                 const size_t c, 
                                 const double eta1, 
@@ -50,11 +50,9 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
                                 const int max_iter,
                                 const double eps, 
                                 const double truncate) { 
-  int i,j,k ; // indices
-  
   /* some frequently used constants */
   a = rho*a ; 
-  double C = 1 / (1 + a) ; 
+  const double C = 1 / (1 + a) ; 
   
   /* initialize vectors for beta-update step in the ADMM */
   std::vector<double> beta_new(m);
@@ -68,10 +66,11 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
   std::vector<double> alpha(c);
   
   /* Indices used for the alpha-update step */
-  int steps[m-1] ; 
+  std::vector<int> steps(m - 1) ; 
+  //int steps[m-1] ; 
   steps[0] = 0 ; 
   
-  for (i = 1; i < (m-1); i ++) { 
+  for (int i = 1; i < (m-1); i ++) { 
     steps[i] = m - i + steps[i - 1] ; 
   }
   
@@ -85,7 +84,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     
     /* ------- beta-update step ---------*/
     //alpha = 2*alpha_old1 - alpha_old2 ; 
-    for (i = 0; i < c; i++) {
+    for (int i = 0; i < c; i++) {
       alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
     }
     
@@ -93,14 +92,14 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     //delta = eta1 * alpha ; 
     //double[] delta (m) ;
     
-    for (i = 0; i < m; i++) { 
+    for (int i = 0; i < m; i++) { 
       delta[i] = eta1 * alpha[i] ;  
       
-      for (j = i+1; j < m; j++) { 
+      for (int j = i+1; j < m; j++) { 
         delta[i] = delta[i] + eta2*W(i,j)*alpha[m + steps[i] + (j - i) - 1] ; 
       }
       
-      for (j = 0; j < i; j++) { 
+      for (int j = 0; j < i; j++) { 
         delta[i] = delta[i] - eta2*W(j,i)*alpha[m + steps[j] - (j - i) - 1] ; 
       }
     }
@@ -111,7 +110,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     //beta_new = C*(a*beta_old + y - delta) ; 
     //diff = sum(abs(beta_new - beta_old)) ; 
     diff = 0 ;
-    for (i = 0; i < m; i ++) {
+    for (int i = 0; i < m; i ++) {
       beta_new[i] = C*(a*beta_old[i] + y[i] - delta[i]) ;
       diff += abs(beta_new[i] - beta_old[i]) ;
     }
@@ -119,13 +118,13 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     // determine whether converged or not
     if (diff < eps) { 
       /* Turn to zero when really close */
-      for (i = 0; i < m; i ++) { 
+      for (int i = 0; i < m; i ++) { 
         if (abs(beta_new[i]) < truncate) { 
           beta_new[i] = 0 ;  
         } 
       }
       
-      Rcpp::NumericVector res(m);
+      Rcpp::DoubleVector res(m);
       std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
       return(res) ;   
     }
@@ -134,14 +133,14 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     //alpha_new = Rcpp::clone(alpha_old1) + rho * eta1 * Rcpp::clone(beta_new) ; 
     // double[] alpha_new (c) ; // TODO change back
     //alpha_new = Rcpp::clone(alpha_old1) ; 
-    for (i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {
       alpha_new[i] = alpha_old1[i] + rho * eta1 * beta_new[i] ;
     }
     
-    k = m; 
+    int k = m; 
     // go over all unique pairs (i,j)
-    for (i = 0; i < m-1; i++) { 
-      for (j = i+1; j < m; j++) { 
+    for (int i = 0; i < m-1; i++) { 
+      for (int j = i+1; j < m; j++) { 
         alpha_new[k] = alpha_old1[k] + rho * eta2 * W(i,j) * (beta_new[i] - beta_new[j]) ; 
         //Rprintf("k = %d\t(i,j) = (%d,%d)\tW[%d,%d] = %g\t%g --> %g\n", k, i, j, i+1, j+1, W[i,j], alpha_old1[k], alpha_new[k]) ; 
         k++; 
@@ -149,7 +148,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
     }
     
     /* Threshold alpha. Must lie in [-1, 1] range */ 
-    for (i = 0; i < c; i ++) { 
+    for (int i = 0; i < c; i ++) { 
       if (alpha_new[i] > 1) { 
         alpha_new[i] = 1 ;  
       } 
@@ -185,7 +184,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::NumericVector y,
   }
   
   /* Turn to zero when really close */
-  for (i = 0; i < m; i ++) { 
+  for (int i = 0; i < m; i ++) { 
     if (abs(beta_new[i]) < truncate) { 
       beta_new[i] = 0 ;  
     } 
