@@ -69,7 +69,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
   a = rho*a ; 
   const double C = 1 / (1 + a) ; 
   
-  Rcout << "C: " << C << endl ; 
+  Rcout << "C: " << C << std::endl ; 
   
   /* initialize vectors for beta-update step in the ADMM */
   double *beta_new = new double[m];
