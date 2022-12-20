@@ -182,14 +182,19 @@ NumericVector genlassoRcpp(const NumericVector y,
     }
     
     /* update beta and alpha for the next iteration step */
-    for (int i = 0; i < m; i ++) { 
-      *(beta_old + i) = *(beta_new + i) ; 
-    }
+    memcpy(beta_old, beta_new, sizeof(beta_new));
+    memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
+    memcpy(alpha_old2, alpha_old1, sizeof(alpha_old1));
     
-    for (int i = 0; i < c; i ++) { 
-      *(alpha_old2 + i) = *(alpha_old1 + i) ; 
-      *(alpha_old1 + i) = *(alpha_new + i) ; 
-    }
+    
+    // for (int i = 0; i < m; i ++) { 
+    //   *(beta_old + i) = *(beta_new + i) ; 
+    // }
+    // 
+    // for (int i = 0; i < c; i ++) { 
+    //   *(alpha_old2 + i) = *(alpha_old1 + i) ; 
+    //   *(alpha_old1 + i) = *(alpha_new + i) ; 
+    // }
     // 
     // beta_old = Map<Eigen::VectorXd>(beta_new) ; 
     // alpha_old2 = Map<Eigen::VectorXd>(alpha_old1) ; 
