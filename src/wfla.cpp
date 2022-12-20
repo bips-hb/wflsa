@@ -59,15 +59,24 @@ NumericVector genlassoRcpp(const NumericVector y,
   double beta_old[m] ; 
   double delta[m] ; 
   
+  memset(beta_new, 0, sizeof(beta_new));
+  memset(beta_old, 0, sizeof(beta_new));
+  memset(delta, 0, sizeof(beta_new));
+  
   // Eigen::VectorXd beta_new(m);
   // Eigen::VectorXd beta_old(m);
   // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  double alpha_new[c] ;
-  double alpha_old1[c] ;
-  double alpha_old2[c] ;
-  double alpha[c] ;
+  double alpha_new[c] ; 
+  double alpha_old1[c] ; 
+  double alpha_old2[c] ; 
+  double alpha[c] ; 
+  
+  memset(alpha_new, 0, sizeof(alpha_new));
+  memset(alpha_old1, 0, sizeof(alpha_old1));
+  memset(alpha_old2, 0, sizeof(alpha_old2));
+  memset(alpha, 0, sizeof(alpha));
   
   // Eigen::VectorXd alpha_new(c);
   // Eigen::VectorXd alpha_old1(c);
@@ -79,7 +88,7 @@ NumericVector genlassoRcpp(const NumericVector y,
   
   //std::vector<size_t> steps(m - 1) ; 
   //int steps[m-1] ; 
-  steps[0] = 0 ; 
+  *steps = 0 ; 
   
   for (int i = 1; i < (m-1); i ++) { 
     *(steps + i) = m - i + *(steps + i - 1) ; 
@@ -100,7 +109,7 @@ NumericVector genlassoRcpp(const NumericVector y,
     /* ------- beta-update step ---------*/
     //alpha = 2*alpha_old1 - alpha_old2 ; 
     for (int i = 0; i < c; i++) {
-       *(alpha + i) = 2*alpha_old1[i] - alpha_old2[i] ;
+       *(alpha + i) = 2*(*(alpha_old1 + i)) - *(alpha_old2 + i) ;
     }
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
