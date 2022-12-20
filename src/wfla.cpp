@@ -54,7 +54,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
   
   double* y = new double[m] ; 
   for (int i = 0; i < m; i ++) { 
-    *(y + i) = Y[i] ; 
+    *(y + i) = (double)(Y[i]) ; 
   }
  
   for (int i = 0; i < m; i ++) { 
