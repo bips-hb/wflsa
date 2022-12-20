@@ -40,7 +40,7 @@ using namespace Rcpp;
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
 NumericVector genlassoRcpp(const NumericVector y, 
-                                const NumericMatrix W, 
+                                const NumericMatrix& W, 
                                 const int m, 
                                 const int c, 
                                 const double eta1, 
@@ -59,9 +59,9 @@ NumericVector genlassoRcpp(const NumericVector y,
   double beta_old[m] ; 
   double delta[m] ; 
   
-  memset(beta_new, 0, sizeof(beta_new));
-  memset(beta_old, 0, sizeof(beta_new));
-  memset(delta, 0, sizeof(beta_new));
+  memset(beta_new, 0, m + 1);
+  memset(beta_old, 0, m + 1);
+  memset(delta, 0, m + 1);
   
   // Eigen::VectorXd beta_new(m);
   // Eigen::VectorXd beta_old(m);
@@ -73,10 +73,10 @@ NumericVector genlassoRcpp(const NumericVector y,
   double alpha_old2[c] ; 
   double alpha[c] ; 
   
-  memset(alpha_new, 0, sizeof(alpha_new));
-  memset(alpha_old1, 0, sizeof(alpha_old1));
-  memset(alpha_old2, 0, sizeof(alpha_old2));
-  memset(alpha, 0, sizeof(alpha));
+  memset(alpha_new, 0, c + 1);
+  memset(alpha_old1, 0, c + 1);
+  memset(alpha_old2, 0, c + 1);
+  memset(alpha, 0, c + 1);
   
   // Eigen::VectorXd alpha_new(c);
   // Eigen::VectorXd alpha_old1(c);
@@ -109,7 +109,8 @@ NumericVector genlassoRcpp(const NumericVector y,
     /* ------- beta-update step ---------*/
     //alpha = 2*alpha_old1 - alpha_old2 ; 
     for (int i = 0; i < c; i++) {
-       *(alpha + i) = 2*(*(alpha_old1 + i)) - *(alpha_old2 + i) ;
+      alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
+      //Rcout << "i: " << i << "  alpha[i] = " << alpha[i] << "  alpha_old1[i] = " << alpha_old1[i] << "  alpha_old2[i] = " << alpha_old2[i] << std::endl ; 
     }
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
@@ -117,14 +118,14 @@ NumericVector genlassoRcpp(const NumericVector y,
     //double[] delta (m) ;
     
     for (int i = 0; i < m; i++) { 
-      *(delta + i) = eta1 * alpha[i] ;  
+      *(delta + i) = eta1 * (*(alpha + i)) ;  
       
       for (int j = i+1; j < m; j++) { 
-        *(delta + i) = *(delta + i) + eta2*W(i,j)*alpha[m + steps[i] + (j - i) - 1] ; 
+        *(delta + i) = *(delta + i) + eta2* W(i,j)*(*(alpha + m + steps[i] + (j - i) - 1)) ; 
       }
       
       for (int j = 0; j < i; j++) { 
-        *(delta + i) = *(delta + i) - eta2*W(j,i)*alpha[m + steps[j] - (j - i) - 1] ; 
+        *(delta + i) = *(delta + i) - eta2*W(j,i)*(*(alpha + m + steps[j] - (j - i) - 1)) ; 
       }
     }
     
