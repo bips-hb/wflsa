@@ -183,8 +183,8 @@ NumericVector genlassoRcpp(const NumericVector y,
     
     /* update beta and alpha for the next iteration step */
     memcpy(beta_old, beta_new, sizeof(beta_new));
-    memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
     memcpy(alpha_old2, alpha_old1, sizeof(alpha_old1));
+    memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
     
     
     // for (int i = 0; i < m; i ++) { 
