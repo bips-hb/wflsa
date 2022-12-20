@@ -57,17 +57,19 @@ NumericVector genlassoRcpp(const NumericVector Y,
     *(y + i) = (double)(Y[i]) ; 
   }
  
-  for (int i = 0; i < m; i ++) { 
-    for (int j = 0; j < m; j ++) { 
-      Rcout << W(i,j) << " " ; 
-    }
-    Rcout << std::endl ; 
-  }
-  Rcout << std::endl ; 
+  // for (int i = 0; i < m; i ++) { 
+  //   for (int j = 0; j < m; j ++) { 
+  //     Rcout << W(i,j) << " " ; 
+  //   }
+  //   Rcout << std::endl ; 
+  // }
+  // Rcout << std::endl ; 
   
   /* some frequently used constants */
   a = rho*a ; 
   const double C = 1 / (1 + a) ; 
+  
+  Rcout << "C: " << C << endl ; 
   
   /* initialize vectors for beta-update step in the ADMM */
   double *beta_new = new double[m];
