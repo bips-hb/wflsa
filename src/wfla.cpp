@@ -50,6 +50,12 @@ NumericVector genlassoRcpp(const NumericVector y,
                                 const int max_iter,
                                 const double eps, 
                                 const double truncate) { 
+  
+  for (int i = 0; i < m; i ++) { 
+    Rcout << y[i] << " " ; 
+  }
+  Rcout << std::endl ; 
+  
   /* some frequently used constants */
   a = rho*a ; 
   const double C = 1 / (1 + a) ; 

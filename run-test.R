@@ -29,10 +29,13 @@ genlasso_implementation <-  function(){
 y <- rnorm(m)
 
 
-
+eta1 = 0
+eta2 = 0
 W <- matrix(rep(1, m*m), ncol = m)
 (g = genlasso_implementation())
 (w = wfla::genlasso_wrapper(y, W, m, m + (m)*(m-1)/2, eta1, eta2, a, rho = rho, 
                        max_iter = 1e7, eps = 10^-16, truncate = 10^-4))
 
 sum(abs(g - w))
+
+sum(abs(w - y))
