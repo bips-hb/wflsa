@@ -158,6 +158,11 @@ NumericVector genlassoRcpp(const NumericVector Y,
       }
     }
     
+    for (int i = 0; i < m; i ++) { 
+      Rcout << *(delta + i) << " " ; 
+    }
+    Rcout << std::endl ; 
+    
     // update beta with the computed delta and determine difference
     //double[] beta_new (m) ;
     // double[] beta_new (m) ;
