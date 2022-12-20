@@ -59,9 +59,14 @@ NumericVector genlassoRcpp(const NumericVector y,
   double beta_old[m] ; 
   double delta[m] ; 
   
-  memset(beta_new, 0, m + 1);
-  memset(beta_old, 0, m + 1);
-  memset(delta, 0, m + 1);
+  for (int i = 0; i < m; i ++) { 
+    *(beta_new + i) = 0;
+    *(beta_old + i) = 0;
+    *(delta + i) = 0;
+  }
+  //memset(beta_new, 0, m);
+ // memset(beta_old, 0, m);
+  //memset(delta, 0, m);
   
   // Eigen::VectorXd beta_new(m);
   // Eigen::VectorXd beta_old(m);
@@ -73,10 +78,17 @@ NumericVector genlassoRcpp(const NumericVector y,
   double alpha_old2[c] ; 
   double alpha[c] ; 
   
-  memset(alpha_new, 0, c + 1);
-  memset(alpha_old1, 0, c + 1);
-  memset(alpha_old2, 0, c + 1);
-  memset(alpha, 0, c + 1);
+  for (int i = 0; i < c; i ++) { 
+    *(alpha_new + i) = 0 ; 
+    *(alpha_old1 + i) = 0 ; 
+    *(alpha_old2 + i) = 0 ; 
+    *(alpha + i) = 0 ; 
+  }
+  // 
+  // memset(alpha_new, 0, c);
+  // memset(alpha_old1, 0, c);
+  // memset(alpha_old2, 0, c);
+  // memset(alpha, 0, c);
   
   // Eigen::VectorXd alpha_new(c);
   // Eigen::VectorXd alpha_old1(c);
@@ -96,8 +108,6 @@ NumericVector genlassoRcpp(const NumericVector y,
   
   //return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new)));
   
-  
-  
   int iter = 0 ;    // number of iterations 
   double diff = 0 ; // absolute difference between beta^(k+1) and beta^k
   
@@ -109,7 +119,8 @@ NumericVector genlassoRcpp(const NumericVector y,
     /* ------- beta-update step ---------*/
     //alpha = 2*alpha_old1 - alpha_old2 ; 
     for (int i = 0; i < c; i++) {
-      alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
+      //alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ; 
+      *(alpha + i) = 2*(*(alpha_old1 + i)) - *(alpha_old2 + i) ;
       //Rcout << "i: " << i << "  alpha[i] = " << alpha[i] << "  alpha_old1[i] = " << alpha_old1[i] << "  alpha_old2[i] = " << alpha_old2[i] << std::endl ; 
     }
     
@@ -121,11 +132,11 @@ NumericVector genlassoRcpp(const NumericVector y,
       *(delta + i) = eta1 * (*(alpha + i)) ;  
       
       for (int j = i+1; j < m; j++) { 
-        *(delta + i) = *(delta + i) + eta2* W(i,j)*(*(alpha + m + steps[i] + (j - i) - 1)) ; 
+        *(delta + i) += eta2* W(i,j)*(*(alpha + m + steps[i] + (j - i) - 1)) ; 
       }
       
       for (int j = 0; j < i; j++) { 
-        *(delta + i) = *(delta + i) - eta2*W(j,i)*(*(alpha + m + steps[j] - (j - i) - 1)) ; 
+        *(delta + i) -= eta2*W(i,j)*(*(alpha + m + steps[j] - (j - i) - 1)) ; 
       }
     }
     
@@ -136,7 +147,8 @@ NumericVector genlassoRcpp(const NumericVector y,
     //diff = sum(abs(beta_new - beta_old)) ; 
     diff = 0 ;
     for (int i = 0; i < m; i ++) {
-      *(beta_new + i) = C*(a*beta_old[i] + y[i] - delta[i]) ;
+      *(beta_new + i) = C*(a*(*(beta_old + i)) + y[i] - *(delta + i)) ; 
+      //*(beta_new + i) = C*(a*beta_old[i] + y[i] - delta[i]) ;
       diff += abs(beta_new[i] - beta_old[i]) ;
     }
     
@@ -144,14 +156,21 @@ NumericVector genlassoRcpp(const NumericVector y,
     if (diff < eps) { 
       /* Turn to zero when really close */
       for (int i = 0; i < m; i ++) { 
-        if (abs(beta_new[i]) < truncate) { 
+        if (fabs(beta_new[i]) < truncate) { 
           *(beta_new + i) = 0 ;  
         } 
       }
       
       //Eigen::VectorXd res(m);
       //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-      return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new)));
+      for (int i = 0; i < m; i ++) { 
+        Rcout << *(beta_new + i) << " " ; 
+      }
+      Rcout << std::endl; 
+      
+      Rcout << "CONVERGED" << std::endl ; 
+      
+      return(NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)));
     }
     
     /* --------- alpha update step ----------- */
@@ -159,14 +178,14 @@ NumericVector genlassoRcpp(const NumericVector y,
     // double[] alpha_new (c) ; // TODO change back
     //alpha_new = Rcpp::clone(alpha_old1) ; 
     for (int i = 0; i < m; i++) {
-      *(alpha_new + i) = alpha_old1[i] + rho * eta1 * beta_new[i] ;
+      *(alpha_new + i) = *(alpha_old1 + i) + rho * eta1 * *(beta_new + i) ;
     }
     
     int k = m; 
     // go over all unique pairs (i,j)
     for (int i = 0; i < m-1; i++) { 
       for (int j = i+1; j < m; j++) { 
-        *(alpha_new + k) = alpha_old1[k] + rho * eta2 * W(i,j) * (beta_new[i] - beta_new[j]) ; 
+        *(alpha_new + k) = *(alpha_old1 + k) + rho * eta2 * W(i,j) * (*(beta_new + i) - *(beta_new + j)) ; 
         //Rprintf("k = %d\t(i,j) = (%d,%d)\tW[%d,%d] = %g\t%g --> %g\n", k, i, j, i+1, j+1, W[i,j], alpha_old1[k], alpha_new[k]) ; 
         k ++; 
       }
@@ -183,9 +202,17 @@ NumericVector genlassoRcpp(const NumericVector y,
     }
     
     /* update beta and alpha for the next iteration step */
-    memcpy(beta_old, beta_new, sizeof(beta_new));
-    memcpy(alpha_old2, alpha_old1, sizeof(alpha_old1));
-    memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
+    for (int i = 0; i < m; i ++) { 
+      *(beta_old + i) = *(beta_new + i) ; 
+    }
+    
+    for (int i = 0; i < c; i ++) { 
+      *(alpha_old2 + i) = *(alpha_old1 + i) ; 
+      *(alpha_old1 + i) = *(alpha_new + i) ; 
+    }
+    //memcpy(beta_old, beta_new, sizeof(beta_new));
+    //memcpy(alpha_old2, alpha_old1, sizeof(alpha_old1));
+    //memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
     
     
     // for (int i = 0; i < m; i ++) { 
@@ -227,13 +254,14 @@ NumericVector genlassoRcpp(const NumericVector y,
   }
   
   /* Turn to zero when really close */
-  for (size_t i = 0; i < m; i ++) { 
-    if (abs(beta_new[i]) < truncate) { 
+  for (int i = 0; i < m; i ++) { 
+    if (fabs(beta_new[i]) < truncate) { 
       beta_new[i] = 0 ;  
     } 
   }
   
+  Rcout << "MAX ITER REACHED" << std::endl ; 
   //Eigen::VectorXd res(m);
   //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-  return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new))); 
+  return(NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new))); 
 }
