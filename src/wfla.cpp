@@ -52,7 +52,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
                                 const double truncate) { 
   
   
-  double* y = new double[m] ; 
+  double* y = new double[m + 1] ; 
   for (int i = 0; i < m; i ++) { 
     *(y + i) = (double)(Y[i]) ; 
   }
@@ -72,10 +72,10 @@ NumericVector genlassoRcpp(const NumericVector Y,
   Rcout << "C: " << C << std::endl ; 
   
   /* initialize vectors for beta-update step in the ADMM */
-  double *beta_new = new double[m];
+  double *beta_new = new double[m+1];
   //double beta_new[m] ; 
-  double *beta_old = new double[m] ; 
-  double *delta = new double[m] ; 
+  double *beta_old = new double[m+1] ; 
+  double *delta = new double[m+1] ; 
   
   for (int i = 0; i < m; i ++) { 
     *(beta_new + i) = 0;
@@ -91,10 +91,10 @@ NumericVector genlassoRcpp(const NumericVector Y,
   // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  double *alpha_new = new double[c] ; 
-  double *alpha_old1= new double[c] ; 
-  double *alpha_old2 = new double[c] ; 
-  double *alpha = new double[c]; 
+  double *alpha_new = new double[c+1] ; 
+  double *alpha_old1= new double[c+1] ; 
+  double *alpha_old2 = new double[c+1] ; 
+  double *alpha = new double[c+1]; 
   
   for (int i = 0; i < c; i ++) { 
     *(alpha_new + i) = 0 ; 
@@ -193,6 +193,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
       delete[] alpha_old2;
       delete[] alpha_new;
       delete[] alpha;
+      delete[] y;
       
       NumericVector res = NumericVector(beta_new, beta_new + m) ; 
       delete[] beta_new ; 
@@ -292,6 +293,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
   delete[] alpha_old2;
   delete[] alpha_new;
   delete[] alpha;
+  delete[] y;
   
   Rcout << "MAX ITER REACHED" << std::endl ; 
   //Eigen::VectorXd res(m);
