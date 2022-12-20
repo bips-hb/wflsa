@@ -55,10 +55,10 @@ NumericVector genlassoRcpp(const NumericVector y,
   const double C = 1 / (1 + a) ; 
   
   /* initialize vectors for beta-update step in the ADMM */
-  double *beta_new = new double[m + 1];
+  double *beta_new = new double[m];
   //double beta_new[m] ; 
-  double *beta_old = new double[m + 1] ; 
-  double *delta = new double[m + 1] ; 
+  double *beta_old = new double[m] ; 
+  double *delta = new double[m] ; 
   
   for (int i = 0; i < m; i ++) { 
     *(beta_new + i) = 0;
@@ -74,10 +74,10 @@ NumericVector genlassoRcpp(const NumericVector y,
   // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  double *alpha_new = new double[c + 1] ; 
-  double *alpha_old1= new double[c + 1] ; 
-  double *alpha_old2 = new double[c + 1] ; 
-  double *alpha = new double[c + 1]; 
+  double *alpha_new = new double[c] ; 
+  double *alpha_old1= new double[c] ; 
+  double *alpha_old2 = new double[c] ; 
+  double *alpha = new double[c]; 
   
   for (int i = 0; i < c; i ++) { 
     *(alpha_new + i) = 0 ; 
@@ -157,7 +157,7 @@ NumericVector genlassoRcpp(const NumericVector y,
     if (diff < eps) { 
       /* Turn to zero when really close */
       for (int i = 0; i < m; i ++) { 
-        if (fabs(beta_new[i]) < truncate) { 
+        if (fabs(*(beta_new + i)) < truncate) { 
           *(beta_new + i) = 0 ;  
         } 
       }
@@ -177,7 +177,7 @@ NumericVector genlassoRcpp(const NumericVector y,
       delete[] alpha_new;
       delete[] alpha;
       
-      NumericVector res = NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)) ; 
+      NumericVector res = NumericVector(beta_new, beta_new + m) ; 
       delete[] beta_new ; 
       
       return(res);
@@ -265,7 +265,7 @@ NumericVector genlassoRcpp(const NumericVector y,
   
   /* Turn to zero when really close */
   for (int i = 0; i < m; i ++) { 
-    if (fabs(beta_new[i]) < truncate) { 
+    if (fabs(*(beta_new + i)) < truncate) { 
       *(beta_new + i) = 0 ;  
     } 
   }
@@ -279,7 +279,7 @@ NumericVector genlassoRcpp(const NumericVector y,
   Rcout << "MAX ITER REACHED" << std::endl ; 
   //Eigen::VectorXd res(m);
   //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-  NumericVector res = NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)) ; 
+  NumericVector res = NumericVector(beta_new, beta_new + m) ; 
   delete[] beta_new ; 
   return(res); 
 }
