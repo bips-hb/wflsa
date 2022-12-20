@@ -55,9 +55,10 @@ NumericVector genlassoRcpp(const NumericVector y,
   const double C = 1 / (1 + a) ; 
   
   /* initialize vectors for beta-update step in the ADMM */
-  double beta_new[m] ; 
-  double beta_old[m] ; 
-  double delta[m] ; 
+  double *beta_new = new double[m];
+  //double beta_new[m] ; 
+  double *beta_old = new double[m] ; 
+  double *delta = new double[m] ; 
   
   for (int i = 0; i < m; i ++) { 
     *(beta_new + i) = 0;
@@ -73,10 +74,10 @@ NumericVector genlassoRcpp(const NumericVector y,
   // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  double alpha_new[c] ; 
-  double alpha_old1[c] ; 
-  double alpha_old2[c] ; 
-  double alpha[c] ; 
+  double *alpha_new = new double[c] ; 
+  double *alpha_old1= new double[c] ; 
+  double *alpha_old2 = new double[c] ; 
+  double *alpha = new double[c]; 
   
   for (int i = 0; i < c; i ++) { 
     *(alpha_new + i) = 0 ; 
@@ -170,7 +171,16 @@ NumericVector genlassoRcpp(const NumericVector y,
       
       Rcout << "CONVERGED" << std::endl ; 
       
-      return(NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)));
+      delete[] beta_old; 
+      delete[] alpha_old1;
+      delete[] alpha_old2;
+      delete[] alpha_new;
+      delete[] alpha;
+      
+      NumericVector res = NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)) ; 
+      delete[] beta_new ; 
+      
+      return(res);
     }
     
     /* --------- alpha update step ----------- */
@@ -260,8 +270,16 @@ NumericVector genlassoRcpp(const NumericVector y,
     } 
   }
   
+  delete[] beta_old; 
+  delete[] alpha_old1;
+  delete[] alpha_old2;
+  delete[] alpha_new;
+  delete[] alpha;
+  
   Rcout << "MAX ITER REACHED" << std::endl ; 
   //Eigen::VectorXd res(m);
   //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-  return(NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new))); 
+  NumericVector res = NumericVector(beta_new, beta_new + sizeof(beta_new) / sizeof(*beta_new)) ; 
+  delete[] beta_new ; 
+  return(res); 
 }
