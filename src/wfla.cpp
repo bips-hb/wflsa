@@ -172,7 +172,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
     for (int i = 0; i < m; i ++) {
       *(beta_new + i) = C*(a*(*(beta_old + i)) + y[i] - *(delta + i)) ; 
       //*(beta_new + i) = C*(a*beta_old[i] + y[i] - delta[i]) ;
-      diff += abs(beta_new[i] - beta_old[i]) ;
+      diff += fabs(*(beta_new + i) - *(beta_old + i)) ; //abs(beta_new[i] - beta_old[i]) ;
     }
     
     // determine whether converged or not
