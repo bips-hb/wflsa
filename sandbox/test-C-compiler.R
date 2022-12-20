@@ -20,5 +20,5 @@ truncate_genlasso <- 10^-5
 # draw random data for y
 y <- rnorm(m)
 
-wfla::genlasso_wrapper(y, W, m, nrow(D), eta1, eta2, a, rho = 1, max_iter = 1000, eps = 10^-10, truncate = 10^-5)
+wfla::genlasso_wrapper(y, W, m, m + (m*(m-1)/2), eta1, eta2, a, rho = 1, max_iter = 1000, eps = 10^-10, truncate = 10^-5)
 

@@ -25,7 +25,7 @@ genlasso_implementation <-  function(){
 
 # draw random data for y
 
-#set.seed(4)
+set.seed(5)
 y <- rnorm(m)
 
 

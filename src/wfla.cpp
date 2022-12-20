@@ -39,10 +39,10 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y, 
-                                const Rcpp::NumericMatrix W, 
-                                const size_t m, 
-                                const size_t c, 
+NumericVector genlassoRcpp(const NumericVector y, 
+                                const NumericMatrix W, 
+                                const int m, 
+                                const int c, 
                                 const double eta1, 
                                 const double eta2, 
                                 double a, 
@@ -55,24 +55,39 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
   const double C = 1 / (1 + a) ; 
   
   /* initialize vectors for beta-update step in the ADMM */
-  std::vector<double> beta_new(m);
-  std::vector<double> beta_old(m);
-  std::vector<double> delta(m);
+  double beta_new[m] ; 
+  double beta_old[m] ; 
+  double delta[m] ; 
+  
+  // Eigen::VectorXd beta_new(m);
+  // Eigen::VectorXd beta_old(m);
+  // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  std::vector<double> alpha_new(c);
-  std::vector<double> alpha_old1(c);
-  std::vector<double> alpha_old2(c);
-  std::vector<double> alpha(c);
+  double alpha_new[c] ;
+  double alpha_old1[c] ;
+  double alpha_old2[c] ;
+  double alpha[c] ;
+  
+  // Eigen::VectorXd alpha_new(c);
+  // Eigen::VectorXd alpha_old1(c);
+  // Eigen::VectorXd alpha_old2(c);
+  // Eigen::VectorXd alpha(c);
   
   /* Indices used for the alpha-update step */
-  std::vector<int> steps(m - 1) ; 
+  int steps[m-1] ; 
+  
+  //std::vector<size_t> steps(m - 1) ; 
   //int steps[m-1] ; 
   steps[0] = 0 ; 
   
   for (int i = 1; i < (m-1); i ++) { 
-    steps[i] = m - i + steps[i - 1] ; 
+    *(steps + i) = m - i + *(steps + i - 1) ; 
   }
+  
+  //return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new)));
+  
+  
   
   int iter = 0 ;    // number of iterations 
   double diff = 0 ; // absolute difference between beta^(k+1) and beta^k
@@ -85,7 +100,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     /* ------- beta-update step ---------*/
     //alpha = 2*alpha_old1 - alpha_old2 ; 
     for (int i = 0; i < c; i++) {
-      alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ;
+       *(alpha + i) = 2*alpha_old1[i] - alpha_old2[i] ;
     }
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
@@ -93,14 +108,14 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     //double[] delta (m) ;
     
     for (int i = 0; i < m; i++) { 
-      delta[i] = eta1 * alpha[i] ;  
+      *(delta + i) = eta1 * alpha[i] ;  
       
       for (int j = i+1; j < m; j++) { 
-        delta[i] = delta[i] + eta2*W(i,j)*alpha[m + steps[i] + (j - i) - 1] ; 
+        *(delta + i) = *(delta + i) + eta2*W(i,j)*alpha[m + steps[i] + (j - i) - 1] ; 
       }
       
       for (int j = 0; j < i; j++) { 
-        delta[i] = delta[i] - eta2*W(j,i)*alpha[m + steps[j] - (j - i) - 1] ; 
+        *(delta + i) = *(delta + i) - eta2*W(j,i)*alpha[m + steps[j] - (j - i) - 1] ; 
       }
     }
     
@@ -111,7 +126,7 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     //diff = sum(abs(beta_new - beta_old)) ; 
     diff = 0 ;
     for (int i = 0; i < m; i ++) {
-      beta_new[i] = C*(a*beta_old[i] + y[i] - delta[i]) ;
+      *(beta_new + i) = C*(a*beta_old[i] + y[i] - delta[i]) ;
       diff += abs(beta_new[i] - beta_old[i]) ;
     }
     
@@ -120,13 +135,13 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
       /* Turn to zero when really close */
       for (int i = 0; i < m; i ++) { 
         if (abs(beta_new[i]) < truncate) { 
-          beta_new[i] = 0 ;  
+          *(beta_new + i) = 0 ;  
         } 
       }
       
-      Rcpp::DoubleVector res(m);
-      std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-      return(res) ;   
+      //Eigen::VectorXd res(m);
+      //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
+      return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new)));
     }
     
     /* --------- alpha update step ----------- */
@@ -134,16 +149,16 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     // double[] alpha_new (c) ; // TODO change back
     //alpha_new = Rcpp::clone(alpha_old1) ; 
     for (int i = 0; i < m; i++) {
-      alpha_new[i] = alpha_old1[i] + rho * eta1 * beta_new[i] ;
+      *(alpha_new + i) = alpha_old1[i] + rho * eta1 * beta_new[i] ;
     }
     
     int k = m; 
     // go over all unique pairs (i,j)
     for (int i = 0; i < m-1; i++) { 
       for (int j = i+1; j < m; j++) { 
-        alpha_new[k] = alpha_old1[k] + rho * eta2 * W(i,j) * (beta_new[i] - beta_new[j]) ; 
+        *(alpha_new + k) = alpha_old1[k] + rho * eta2 * W(i,j) * (beta_new[i] - beta_new[j]) ; 
         //Rprintf("k = %d\t(i,j) = (%d,%d)\tW[%d,%d] = %g\t%g --> %g\n", k, i, j, i+1, j+1, W[i,j], alpha_old1[k], alpha_new[k]) ; 
-        k++; 
+        k ++; 
       }
     }
     
@@ -158,10 +173,23 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
     }
     
     /* update beta and alpha for the next iteration step */
-    std::copy(beta_new.begin(), beta_new.end(), beta_old.begin()) ; 
-    std::copy(alpha_old1.begin(), alpha_old1.end(), alpha_old2.begin()) ; 
-    std::copy(alpha_new.begin(), alpha_new.end(), alpha_old1.begin()) ; 
+    for (int i = 0; i < m; i ++) { 
+      *(beta_old + i) = *(beta_new + i) ; 
+    }
     
+    for (int i = 0; i < c; i ++) { 
+      *(alpha_old2 + i) = *(alpha_old1 + i) ; 
+      *(alpha_old1 + i) = *(alpha_new + i) ; 
+    }
+    // 
+    // beta_old = Map<Eigen::VectorXd>(beta_new) ; 
+    // alpha_old2 = Map<Eigen::VectorXd>(alpha_old1) ; 
+    // alpha_old1 = Map<Eigen::VectorXd>(alpha_new) ; 
+    // 
+    // std::copy(beta_new.begin(), beta_new.end(), beta_old.begin()) ; 
+    // std::copy(alpha_old1.begin(), alpha_old1.end(), alpha_old2.begin()) ; 
+    // std::copy(alpha_new.begin(), alpha_new.end(), alpha_old1.begin()) ; 
+    // 
     // 
     // double beta_new[m] ; // beta^(k + 1)
     // double delta [m] ; // aux. vector for beta-update step
@@ -184,13 +212,13 @@ Rcpp::DoubleVector genlassoRcpp(Rcpp::DoubleVector y,
   }
   
   /* Turn to zero when really close */
-  for (int i = 0; i < m; i ++) { 
+  for (size_t i = 0; i < m; i ++) { 
     if (abs(beta_new[i]) < truncate) { 
       beta_new[i] = 0 ;  
     } 
   }
   
-  Rcpp::DoubleVector res(m);
-  std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-  return(res) ;   
+  //Eigen::VectorXd res(m);
+  //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
+  return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new))); 
 }
