@@ -192,6 +192,7 @@ NumericVector genlassoRcpp(const NumericVector Y,
       Rcout << std::endl; 
       
       Rcout << "CONVERGED" << std::endl ; 
+      Rcout << "Iter: " << iter << std::endl ; 
       
       delete[] beta_old; 
       delete[] alpha_old1;
