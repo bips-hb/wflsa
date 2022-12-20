@@ -11,12 +11,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // genlassoRcpp
-NumericVector genlassoRcpp(const NumericVector y, const NumericMatrix W, const int m, const int c, const double eta1, const double eta2, double a, const double rho, const int max_iter, const double eps, const double truncate);
-RcppExport SEXP _wfla_genlassoRcpp(SEXP ySEXP, SEXP WSEXP, SEXP mSEXP, SEXP cSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
+NumericVector genlassoRcpp(const NumericVector Y, const NumericMatrix W, const int m, const int c, const double eta1, const double eta2, double a, const double rho, const int max_iter, const double eps, const double truncate);
+RcppExport SEXP _wfla_genlassoRcpp(SEXP YSEXP, SEXP WSEXP, SEXP mSEXP, SEXP cSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type Y(YSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix >::type W(WSEXP);
     Rcpp::traits::input_parameter< const int >::type m(mSEXP);
     Rcpp::traits::input_parameter< const int >::type c(cSEXP);
@@ -27,7 +27,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
     Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< const double >::type truncate(truncateSEXP);
-    rcpp_result_gen = Rcpp::wrap(genlassoRcpp(y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate));
+    rcpp_result_gen = Rcpp::wrap(genlassoRcpp(Y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate));
     return rcpp_result_gen;
 END_RCPP
 }

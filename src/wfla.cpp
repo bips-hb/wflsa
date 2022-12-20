@@ -39,7 +39,7 @@ using namespace Rcpp;
 //' 
 //' @seealso \code{\link{genlasso_wrapper}}
 // [[Rcpp::export]]
-NumericVector genlassoRcpp(const NumericVector y, 
+NumericVector genlassoRcpp(const NumericVector Y, 
                                 const NumericMatrix W, 
                                 const int m, 
                                 const int c, 
@@ -51,6 +51,12 @@ NumericVector genlassoRcpp(const NumericVector y,
                                 const double eps, 
                                 const double truncate) { 
   
+  
+  double* y = new double[m] ; 
+  for (int i = 0; i < m; i ++) { 
+    *(y + i) = Y[i] ; 
+  }
+ 
   for (int i = 0; i < m; i ++) { 
     for (int j = 0; j < m; j ++) { 
       Rcout << W(i,j) << " " ; 

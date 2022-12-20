@@ -38,7 +38,7 @@
 #' 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
 #' 
 #' @seealso \code{\link{genlasso_wrapper}}
-genlassoRcpp <- function(y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate) {
-    .Call('_wfla_genlassoRcpp', PACKAGE = 'wfla', y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate)
+genlassoRcpp <- function(Y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate) {
+    .Call('_wfla_genlassoRcpp', PACKAGE = 'wfla', Y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate)
 }
 
