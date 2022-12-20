@@ -256,7 +256,7 @@ NumericVector genlassoRcpp(const NumericVector y,
   /* Turn to zero when really close */
   for (int i = 0; i < m; i ++) { 
     if (fabs(beta_new[i]) < truncate) { 
-      beta_new[i] = 0 ;  
+      *(beta_new + i) = 0 ;  
     } 
   }
   
