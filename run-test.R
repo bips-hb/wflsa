@@ -29,9 +29,11 @@ genlasso_implementation <-  function(){
 y <- rnorm(m)
 
 
-eta1 = 0
-eta2 = 0
+#eta1 = 0
+#eta2 = 0
 W <- matrix(rep(1, m*m), ncol = m)
+W <- CVN::create_weight_matrix(type = "uniform-random", m = m)
+
 (g = genlasso_implementation())
 (w = wfla::genlasso_wrapper(y, W, m, m + (m)*(m-1)/2, eta1, eta2, a, rho = rho, 
                        max_iter = 1e7, eps = 10^-16, truncate = 10^-4))
