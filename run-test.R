@@ -1,7 +1,7 @@
 library(wfla)
 library(genlasso)
 
-m <- 12
+m <- 50
 
 lambda1 <- .4
 lambda2 <- .01
@@ -25,18 +25,22 @@ genlasso_implementation <-  function(){
 
 # draw random data for y
 
-#set.seed(5)
+set.seed(5)
 y <- rnorm(m)
 
 
-eta1 = 0
-eta2 = 0
+#eta1 = 0
+#eta2 = 0
 W <- matrix(rep(1, m*m), ncol = m)
 W <- CVN::create_weight_matrix(type = "uniform-random", m = m)
 
 (g = genlasso_implementation())
 (w = wfla::genlasso_wrapper(y, W, m, m + (m)*(m-1)/2, eta1, eta2, a, rho = rho, 
                        max_iter = 1e5, eps = 10^-10, truncate = 10^-4))
+
+microbenchmark::microbenchmark(genlasso_implementation(), 
+                               wfla::genlasso_wrapper(y, W, m, m + (m)*(m-1)/2, eta1, eta2, a, rho = rho, 
+                                                      max_iter = 1e5, eps = 10^-10, truncate = 10^-4), times = 4)
 
 sum(abs(g - w))
 

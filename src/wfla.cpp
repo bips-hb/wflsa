@@ -52,79 +52,49 @@ NumericVector genlassoRcpp(const NumericVector Y,
                                 const double truncate) { 
   
   
-  double* y = new double[m + 1] ; 
-  for (int i = 0; i < m; i ++) { 
-    *(y + i) = (double)(Y[i]) ; 
-  }
- 
-  // for (int i = 0; i < m; i ++) { 
-  //   for (int j = 0; j < m; j ++) { 
-  //     Rcout << W(i,j) << " " ; 
-  //   }
-  //   Rcout << std::endl ; 
-  // }
-  // Rcout << std::endl ; 
-  
   /* some frequently used constants */
   a = rho*a ; 
   const double C = 1 / (1 + a) ; 
   
-  Rcout << "C: " << C << std::endl ; 
+  /* Compute y to a double array. I did this to make sure that the C compilation 
+   * environment does not have an effect */
+  double* y = new double[m + 1] ; 
+  for (int i = 0; i < m; i ++) { 
+    *(y + i) = (double)(Y[i]) ; 
+  }
   
   /* initialize vectors for beta-update step in the ADMM */
   double *beta_new = new double[m+1];
-  //double beta_new[m] ; 
   double *beta_old = new double[m+1] ; 
-  double *delta = new double[m+1] ; 
+  double *delta    = new double[m+1] ; 
   
   for (int i = 0; i < m; i ++) { 
     *(beta_new + i) = 0;
     *(beta_old + i) = 0;
-    *(delta + i) = 0;
+    *(delta + i)    = 0;
   }
-  //memset(beta_new, 0, m);
- // memset(beta_old, 0, m);
-  //memset(delta, 0, m);
-  
-  // Eigen::VectorXd beta_new(m);
-  // Eigen::VectorXd beta_old(m);
-  // Eigen::VectorXd delta(m);
   
   /* initialize vectors for alpha-update step in the ADMM */
-  double *alpha_new = new double[c+1] ; 
-  double *alpha_old1= new double[c+1] ; 
+  double *alpha_new  = new double[c+1] ; 
+  double *alpha_old1 = new double[c+1] ; 
   double *alpha_old2 = new double[c+1] ; 
-  double *alpha = new double[c+1]; 
+  double *alpha      = new double[c+1]; 
   
   for (int i = 0; i < c; i ++) { 
-    *(alpha_new + i) = 0 ; 
+    *(alpha_new + i)  = 0 ; 
     *(alpha_old1 + i) = 0 ; 
     *(alpha_old2 + i) = 0 ; 
-    *(alpha + i) = 0 ; 
+    *(alpha + i)      = 0 ; 
   }
-  // 
-  // memset(alpha_new, 0, c);
-  // memset(alpha_old1, 0, c);
-  // memset(alpha_old2, 0, c);
-  // memset(alpha, 0, c);
-  
-  // Eigen::VectorXd alpha_new(c);
-  // Eigen::VectorXd alpha_old1(c);
-  // Eigen::VectorXd alpha_old2(c);
-  // Eigen::VectorXd alpha(c);
   
   /* Indices used for the alpha-update step */
   int steps[m-1] ; 
-  
-  //std::vector<size_t> steps(m - 1) ; 
-  //int steps[m-1] ; 
+
   *steps = 0 ; 
   
   for (int i = 1; i < (m-1); i ++) { 
     *(steps + i) = m - i + *(steps + i - 1) ; 
   }
-  
-  //return(NumericVector(beta_new ,beta_new + sizeof(beta_new) / sizeof(*beta_new)));
   
   int iter = 0 ;    // number of iterations 
   double diff = 0 ; // absolute difference between beta^(k+1) and beta^k
@@ -135,17 +105,12 @@ NumericVector genlassoRcpp(const NumericVector Y,
   while (iter < max_iter) { 
     
     /* ------- beta-update step ---------*/
-    //alpha = 2*alpha_old1 - alpha_old2 ; 
+    // alpha = 2*alpha_old1 - alpha_old2 ; 
     for (int i = 0; i < c; i++) {
-      //alpha[i] = 2*alpha_old1[i] - alpha_old2[i] ; 
       *(alpha + i) = 2*(*(alpha_old1 + i)) - *(alpha_old2 + i) ;
-      //Rcout << "i: " << i << "  alpha[i] = " << alpha[i] << "  alpha_old1[i] = " << alpha_old1[i] << "  alpha_old2[i] = " << alpha_old2[i] << std::endl ; 
     }
     
     // go over all possible pairs (i,j), same as D^T %*% (2 alpha^(k) - alpha^(k-1)) 
-    //delta = eta1 * alpha ; 
-    //double[] delta (m) ;
-    
     for (int i = 0; i < m; i++) { 
       *(delta + i) = eta1 * (*(alpha + i)) ;  
       
@@ -157,21 +122,10 @@ NumericVector genlassoRcpp(const NumericVector Y,
         *(delta + i) -= eta2*W(i,j)*(*(alpha + m + steps[j] - (j - i) - 1)) ; 
       }
     }
-    
-    for (int i = 0; i < m; i ++) { 
-      Rcout << *(delta + i) << " " ; 
-    }
-    Rcout << std::endl ; 
-    
-    // update beta with the computed delta and determine difference
-    //double[] beta_new (m) ;
-    // double[] beta_new (m) ;
-    //beta_new = C*(a*beta_old + y - delta) ; 
-    //diff = sum(abs(beta_new - beta_old)) ; 
+ 
     diff = 0 ;
     for (int i = 0; i < m; i ++) {
       *(beta_new + i) = C*(a*(*(beta_old + i)) + y[i] - *(delta + i)) ; 
-      //*(beta_new + i) = C*(a*beta_old[i] + y[i] - delta[i]) ;
       diff += fabs(*(beta_new + i) - *(beta_old + i)) ; //abs(beta_new[i] - beta_old[i]) ;
     }
     
@@ -184,33 +138,22 @@ NumericVector genlassoRcpp(const NumericVector Y,
         } 
       }
       
-      //Eigen::VectorXd res(m);
-      //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-      for (int i = 0; i < m; i ++) { 
-        Rcout << *(beta_new + i) << " " ; 
-      }
-      Rcout << std::endl; 
+      // convert results to NumericVector for R 
+      NumericVector res = NumericVector(beta_new, beta_new + m) ; 
       
-      Rcout << "CONVERGED" << std::endl ; 
-      Rcout << "Iter: " << iter << std::endl ; 
-      
+      // Clean-up ------------
       delete[] beta_old; 
       delete[] alpha_old1;
       delete[] alpha_old2;
       delete[] alpha_new;
       delete[] alpha;
       delete[] y;
-      
-      NumericVector res = NumericVector(beta_new, beta_new + m) ; 
       delete[] beta_new ; 
       
       return(res);
     }
     
     /* --------- alpha update step ----------- */
-    //alpha_new = Rcpp::clone(alpha_old1) + rho * eta1 * Rcpp::clone(beta_new) ; 
-    // double[] alpha_new (c) ; // TODO change back
-    //alpha_new = Rcpp::clone(alpha_old1) ; 
     for (int i = 0; i < m; i++) {
       *(alpha_new + i) = *(alpha_old1 + i) + rho * eta1 * *(beta_new + i) ;
     }
@@ -220,7 +163,6 @@ NumericVector genlassoRcpp(const NumericVector Y,
     for (int i = 0; i < m-1; i++) { 
       for (int j = i+1; j < m; j++) { 
         *(alpha_new + k) = *(alpha_old1 + k) + rho * eta2 * W(i,j) * (*(beta_new + i) - *(beta_new + j)) ; 
-        //Rprintf("k = %d\t(i,j) = (%d,%d)\tW[%d,%d] = %g\t%g --> %g\n", k, i, j, i+1, j+1, W[i,j], alpha_old1[k], alpha_new[k]) ; 
         k ++; 
       }
     }
@@ -244,45 +186,6 @@ NumericVector genlassoRcpp(const NumericVector Y,
       *(alpha_old2 + i) = *(alpha_old1 + i) ; 
       *(alpha_old1 + i) = *(alpha_new + i) ; 
     }
-    //memcpy(beta_old, beta_new, sizeof(beta_new));
-    //memcpy(alpha_old2, alpha_old1, sizeof(alpha_old1));
-    //memcpy(alpha_old1, alpha_new, sizeof(alpha_new));
-    
-    
-    // for (int i = 0; i < m; i ++) { 
-    //   *(beta_old + i) = *(beta_new + i) ; 
-    // }
-    // 
-    // for (int i = 0; i < c; i ++) { 
-    //   *(alpha_old2 + i) = *(alpha_old1 + i) ; 
-    //   *(alpha_old1 + i) = *(alpha_new + i) ; 
-    // }
-    // 
-    // beta_old = Map<Eigen::VectorXd>(beta_new) ; 
-    // alpha_old2 = Map<Eigen::VectorXd>(alpha_old1) ; 
-    // alpha_old1 = Map<Eigen::VectorXd>(alpha_new) ; 
-    // 
-    // std::copy(beta_new.begin(), beta_new.end(), beta_old.begin()) ; 
-    // std::copy(alpha_old1.begin(), alpha_old1.end(), alpha_old2.begin()) ; 
-    // std::copy(alpha_new.begin(), alpha_new.end(), alpha_old1.begin()) ; 
-    // 
-    // 
-    // double beta_new[m] ; // beta^(k + 1)
-    // double delta [m] ; // aux. vector for beta-update step
-    // 
-    // /* initialize vectors for alpha-update step in the ADMM */
-    // double alpha_new[c] ; 
-    // double alpha[c] ; 
-    //beta_old   = Rcpp::clone(beta_new) ; 
-    //alpha_old2 = Rcpp::clone(alpha_old1) ; 
-    //alpha_old1 = Rcpp::clone(alpha_new) ; 
-    // 
-    // double[] beta_new (m) ;
-    // double[] alpha_new (c) ; 
-    // 
-    // double[] delta (m) ; // aux. vector for beta-update step
-    // double[] alpha (c) ; // used to store (2*alpha^k - alpha^(k-1))
-    // 
     
     iter ++; 
   }
@@ -294,17 +197,17 @@ NumericVector genlassoRcpp(const NumericVector Y,
     } 
   }
   
+  // convert results to NumericVector for R 
+  NumericVector res = NumericVector(beta_new, beta_new + m) ; 
+  
+  // Clean-up ------------
   delete[] beta_old; 
   delete[] alpha_old1;
   delete[] alpha_old2;
   delete[] alpha_new;
   delete[] alpha;
   delete[] y;
-  
-  Rcout << "MAX ITER REACHED" << std::endl ; 
-  //Eigen::VectorXd res(m);
-  //std::copy(beta_new.begin(), beta_new.end(), res.begin()) ; 
-  NumericVector res = NumericVector(beta_new, beta_new + m) ; 
   delete[] beta_new ; 
-  return(res); 
+  
+  return(res);
 }
