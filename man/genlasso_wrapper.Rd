@@ -4,7 +4,7 @@
 \alias{genlasso_wrapper}
 \title{Wrapper for \code{genlassoRcpp}}
 \usage{
-genlasso_wrapper(y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate)
+genlasso_wrapper(y, W, p, eta1, eta2, a, rho, max_iter, eps, truncate)
 }
 \description{
 See for details \code{\link{genlassoRcpp}}

@@ -11,15 +11,14 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // genlassoRcpp
-NumericVector genlassoRcpp(const NumericVector Y, const NumericMatrix W, const int m, const int c, const double eta1, const double eta2, double a, const double rho, const int max_iter, const double eps, const double truncate);
-RcppExport SEXP _wfla_genlassoRcpp(SEXP YSEXP, SEXP WSEXP, SEXP mSEXP, SEXP cSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
+NumericVector genlassoRcpp(const NumericVector Y, const NumericMatrix W, const int m, const double eta1, const double eta2, double a, const double rho, const int max_iter, const double eps, const double truncate);
+RcppExport SEXP _wfla_genlassoRcpp(SEXP YSEXP, SEXP WSEXP, SEXP mSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector >::type Y(YSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix >::type W(WSEXP);
     Rcpp::traits::input_parameter< const int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< const int >::type c(cSEXP);
     Rcpp::traits::input_parameter< const double >::type eta1(eta1SEXP);
     Rcpp::traits::input_parameter< const double >::type eta2(eta2SEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
@@ -27,13 +26,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
     Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< const double >::type truncate(truncateSEXP);
-    rcpp_result_gen = Rcpp::wrap(genlassoRcpp(Y, W, m, c, eta1, eta2, a, rho, max_iter, eps, truncate));
+    rcpp_result_gen = Rcpp::wrap(genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_wfla_genlassoRcpp", (DL_FUNC) &_wfla_genlassoRcpp, 11},
+    {"_wfla_genlassoRcpp", (DL_FUNC) &_wfla_genlassoRcpp, 10},
     {NULL, NULL, 0}
 };
 
