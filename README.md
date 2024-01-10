@@ -20,7 +20,7 @@ Where:
 
 ## Example Use
 
-An simple example: 
+A simple example: 
 ```R
 library(wflsa)
 
