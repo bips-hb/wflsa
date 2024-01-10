@@ -1,16 +1,17 @@
 Package: wfla
-Title: Weighted Fused Lasso Approximator (wfla)
-Version: 1.1
-Date: 2022-09-05
+Title: Weighted Fused LASSO Signal Approximator (wFLSA)
+Version: 1.2
+Date: 2024-10-01
 Author: Louis Dijkstra [aut, cre]
 Maintainer: Louis Dijkstra <dijkstra@leibniz-bips.de>
 Description: A package for computing the 
-    Weighted Fused Lasso Approximator
+    Weighted Fused LASSO Signal Approximator (wFLSA)
 Imports: 
 Depends: 
 	R (>= 4.0.2), 
 	Rcpp,
-	Matrix
+	Matrix, 
+	dplyr
 LinkingTo: Rcpp
 License: GPL-3
 Encoding: UTF-8
