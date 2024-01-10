@@ -98,13 +98,12 @@ wfla <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1,
   }
   
   # Get all possible combinations and determine the eta1 and eta2 values
-  tuning_parameters <- dplyr::tibble(expand.grid(lambda1 = lambda1,
-                                                 lambda2 = lambda2)) %>% 
-    dplyr::mutate(eta1 = lambda1 / rho,
-                  eta2 = lambda2 / rho)
+  tuning_parameters <- data.frame(expand.grid(lambda1 = lambda1, lambda2 = lambda2))
+  tuning_parameters$eta1 <- tuning_parameters$lambda1 / rho
+  tuning_parameters$eta2 <- tuning_parameters$lambda2 / rho
   
   # Determine the value of a such that aI - D'D is positive definite (see paper)
-  a <- CVN::matrix_A_inner_ADMM(W, max(tuning_parameters$eta1), max(tuning_parameters$eta2)) + 10
+  a <- wfla::calculate_diagonal_matrix_A(W, max(tuning_parameters$eta1), max(tuning_parameters$eta2)) + 10
   
   # Calculate the regression coefficients for all combinations of lambda1 and lambda2
   betas <- lapply(1:nrow(tuning_parameters), function(i) {

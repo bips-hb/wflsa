@@ -9,9 +9,7 @@ Description: A package for computing the
 Imports: 
 Depends: 
 	R (>= 4.0.2), 
-	Rcpp,
-	Matrix, 
-	dplyr
+	Rcpp
 LinkingTo: Rcpp
 License: GPL-3
 Encoding: UTF-8

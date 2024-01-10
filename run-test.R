@@ -34,7 +34,7 @@ y <- rnorm(m)
 W <- matrix(rep(1, m*m), ncol = m)
 W <- CVN::create_weight_matrix(type = "uniform-random", m = m)
 
-wfla::
+wfla::calculate_diagonal_matrix_A(W, 3, 4)
 
 (g = genlasso_implementation())
 (w = wfla::genlasso_wrapper(y, W, m, eta1, eta2, a, rho = rho, 

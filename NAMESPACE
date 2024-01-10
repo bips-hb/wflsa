@@ -2,8 +2,6 @@
 
 S3method(print,wflsa.fit)
 export(calculate_diagonal_matrix_A)
-export(create_matrix_D)
-export(genlasso_wrapper)
 export(wfla)
 import(Rcpp)
 useDynLib(wfla)
