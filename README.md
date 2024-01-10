@@ -18,6 +18,31 @@ Where:
 - $\lambda_2 > 0$ is the regularization parameter controlling the smoothness.
 - $w_{ij} \in [0,1]$ is the weight between the $i$-th and $j$-th coefficient.
 
+## Example Use
+
+An simple example: 
+```R
+library(wflsa)
+
+set.seed(1)
+
+# number of covariates
+p <- 10
+
+# the response vector
+y <- rnorm(p)
+
+# Fully connected (Weight matrix is 1)
+W <- matrix(rep(1, p*p), ncol = p) - diag(p)
+
+# lambda values:
+lambda1 <- c(0.01, 0.1, 0.2)
+lambda2 <- c(0.01, 0.1, 0.2)
+
+# Solve the weighted Fused LASSO Signal Approximator
+wflsa(y, W, lambda1, lambda2)
+```
+
 ## Installation
 
 You can install the package from GitHub using the `devtools` package:
