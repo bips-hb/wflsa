@@ -1,11 +1,11 @@
-#' wfla
+#' wflsa
 #'
-#' An estimator for the Weighted Fused Lasso Approximator (wfla)
+#' An Estimator for the Weighted Fused Lasso Signal Approximator (wFLSA)
 #'
 #' @docType package
 #' @author Louis Dijkstra
 #' @import Rcpp
-#' @useDynLib wfla
-#' @name wfla
+#' @useDynLib wflsa
+#' @name wflsa
 NULL
 

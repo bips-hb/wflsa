@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // genlassoRcpp
 NumericVector genlassoRcpp(const NumericVector Y, const NumericMatrix W, const int m, const double eta1, const double eta2, double a, const double rho, const int max_iter, const double eps, const double truncate);
-RcppExport SEXP _wfla_genlassoRcpp(SEXP YSEXP, SEXP WSEXP, SEXP mSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
+RcppExport SEXP _wflsa_genlassoRcpp(SEXP YSEXP, SEXP WSEXP, SEXP mSEXP, SEXP eta1SEXP, SEXP eta2SEXP, SEXP aSEXP, SEXP rhoSEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP truncateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,11 +32,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_wfla_genlassoRcpp", (DL_FUNC) &_wfla_genlassoRcpp, 10},
+    {"_wflsa_genlassoRcpp", (DL_FUNC) &_wflsa_genlassoRcpp, 10},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_wfla(DllInfo *dll) {
+RcppExport void R_init_wflsa(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

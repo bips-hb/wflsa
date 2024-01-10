@@ -5,6 +5,6 @@
 NULL
 
 genlassoRcpp <- function(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate) {
-    .Call('_wfla_genlassoRcpp', PACKAGE = 'wfla', Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
+    .Call('_wflsa_genlassoRcpp', PACKAGE = 'wflsa', Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 }
 

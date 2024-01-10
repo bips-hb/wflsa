@@ -43,8 +43,8 @@ wfla::calculate_diagonal_matrix_A(W, 3, 4)
 microbenchmark::microbenchmark(genlasso_implementation(), 
                                wfla::wfla(y, W,lambda1 = 1, lambda2 = .1, max_iter = 10^5), times = 4)
 
-x = wfla::wfla(y, W,lambda1 = c(.2,.3), lambda2 = c(.1, .2))
-
+x = wflsa::wfla(y, W,lambda1 = c(.2,.3), lambda2 = c(.1, .2))
+wflsa::wflsa
 sum(abs(g - w))
 
 sum(abs(w - y))

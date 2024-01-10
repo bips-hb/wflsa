@@ -39,16 +39,16 @@
 #' 
 #' @seealso \code{\link{genlassoRcpp}}
 #' @examples
-#' # Example usage of the wfla function
+#' # Example usage of the wflsa function
 #' y <- c(1, 2, 3)
 #' W <- matrix(c(1, 0, 0, 0, 1, 0, 0, 0, 1), ncol = 3)
 #' lambda1 <- c(0.1, 0.2)
 #' lambda2 <- c(0.1, 0.2)
-#' result <- wfla(y, W, lambda1, lambda2)
+#' result <- wflsa(y, W, lambda1, lambda2)
 #'
 #' @export
-wfla <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1, 
-                 max_iter = 1e5, eps = 1e-10, truncate = 1e-4, offset = TRUE) {
+wflsa <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1, 
+                  max_iter = 1e5, eps = 1e-10, truncate = 1e-4, offset = TRUE) {
   
   # number of variables
   p <- length(y)
@@ -103,7 +103,7 @@ wfla <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1,
   tuning_parameters$eta2 <- tuning_parameters$lambda2 / rho
   
   # Determine the value of a such that aI - D'D is positive definite (see paper)
-  a <- wfla::calculate_diagonal_matrix_A(W, max(tuning_parameters$eta1), max(tuning_parameters$eta2)) + 10
+  a <- wflsa::calculate_diagonal_matrix_A(W, max(tuning_parameters$eta1), max(tuning_parameters$eta2)) + 10
   
   # Calculate the regression coefficients for all combinations of lambda1 and lambda2
   betas <- lapply(1:nrow(tuning_parameters), function(i) {
