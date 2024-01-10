@@ -13,7 +13,7 @@ The problem solved by the wFLSA algorithm is formulated as follows:
 Where:
 - $y$ is the response variable with mean 0.
 - $\beta$ is the vector of coefficients to be estimated.
-- $\| \cdot \|_1$ and $\| \cdot \|_2$ are the $L_1$- and $L_2$-norms, respectively.
+- $|| \cdot ||_1$ and $|| \cdot ||_2$ are the $L_1$- and $L_2$-norms, respectively.
 - $\lambda_1 > 0$ is the regularization parameter controlling the strength of the sparsity penalty.
 - $\lambda_2 > 0$ is the regularization parameter controlling the smoothness.
 - $w_{ij} \in [0,1]$ is the weight between the $i$-th and $j$-th coefficient.
