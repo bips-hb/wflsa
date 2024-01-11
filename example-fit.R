@@ -36,11 +36,12 @@ band_matrix <- function(p) {
 # creating the weight matrix commonly used for the 1-dimensional fused lasso signal approximator
 W <- band_matrix(p)
 
-fit <- wflsa::wflsa(y, W, lambda1 = .1, lambda2 = 1)
+fit <- wflsa::wflsa(y, W, lambda1 = 1, lambda2 = 4)
 fit_flsa <- as.vector(flsa(y, lambda1 = .1, lambda2 = 2))
 
 data <- dplyr::tibble(
   index = 1:p, 
+  mu = mu,
   y = y, 
   beta_fit = fit$betas[[1]], 
   beta_fit_flsa = fit_flsa
@@ -49,7 +50,8 @@ data <- dplyr::tibble(
 ggplot2::ggplot(data) + 
   geom_point(mapping = aes(index, y), color = 'blue') + 
   geom_point(mapping = aes(index, beta_fit), color = 'red') + 
-  geom_point(mapping = aes(index, beta_fit_flsa), color = 'green') + 
+  geom_point(mapping = aes(index, mu), color = 'purple') + 
+  # geom_point(mapping = aes(index, beta_fit_flsa), color = 'green') + 
   ylab("value") + 
   xlab("variable") + 
   ggtitle("Raw data (blue) and fitted values (red)")
