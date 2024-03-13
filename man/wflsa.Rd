@@ -8,8 +8,7 @@
 wflsa(
   y,
   W,
-  lambda1 = c(0.1),
-  lambda2 = c(0.1),
+  lambda2 = c(0.1, 0.2),
   rho = 1,
   max_iter = 1e+05,
   eps = 1e-10,
@@ -22,9 +21,7 @@ wflsa(
 
 \item{W}{Weight matrix of dimensions \eqn{p \times p}.}
 
-\item{lambda1}{Vector of positive regularization parameters for \eqn{L_1} penalty.}
-
-\item{lambda2}{Vector of positive regularization parameters for smoothness penalty.}
+\item{lambda2}{Vector of positive regularization parameters for smoothness penalty (Default: \code{(.1, .2)})}
 
 \item{rho}{ADMM's parameter (Default: \code{1}).}
 
@@ -35,14 +32,13 @@ the algorithm halts (Default: \code{1e-10}).}
 
 \item{truncate}{Values below \code{truncate} are set to \code{0} (Default: \code{1e-4}).}
 
-\item{offset}{Logical indicating whether to include an intercept term (Default: \code{TRUE}).}
+\item{offset}{Logical indicating whether the data is centered (Default: \code{TRUE}).}
 }
 \value{
 A list containing:
 \itemize{
- \item \code{betas}: Estimated vector \eqn{\hat{\beta}} from the Weighted Fused LASSO.
- \item \code{tuning_parameters}: Data frame with tuning parameters. The column \code{df} 
-       contains the number of non-zero coefficients for the different lambda-values
+ \item \code{betas}: A list with estimates. Each entry are the \eqn{\beta}-estimates
+       for a specific value of \eqn{\lambda_2}. 
  \item all input variables.
 }
 }
@@ -61,6 +57,7 @@ where:
  \item \eqn{\lambda_2 > 0} is the regularization parameter controlling the smoothness. 
  \item \eqn{w_{ij} \in [0,1]} is the weight between the \eqn{i}-th and \eqn{j}-th coefficient.
 }
+This implementation solves the entire path for a fixed value of \eqn{\lambda_2}.
 
 An Estimator for the Weighted Fused Lasso Signal Approximator (wFLSA)
 }

@@ -14,23 +14,22 @@
 #'  \item \eqn{\lambda_2 > 0} is the regularization parameter controlling the smoothness. 
 #'  \item \eqn{w_{ij} \in [0,1]} is the weight between the \eqn{i}-th and \eqn{j}-th coefficient.
 #' }
+#' This implementation solves the entire path for a fixed value of \eqn{\lambda_2}. 
 #' 
 #' @param y Vector of length \eqn{p} representing the response variable (assumed to be centered).
 #' @param W Weight matrix of dimensions \eqn{p \times p}.
-#' @param lambda1 Vector of positive regularization parameters for \eqn{L_1} penalty.
-#' @param lambda2 Vector of positive regularization parameters for smoothness penalty.
+#' @param lambda2 Vector of positive regularization parameters for smoothness penalty (Default: \code{(.1, .2)})
 #' @param rho ADMM's parameter (Default: \code{1}).
 #' @param max_iter Maximum number of iterations (Default: \code{1e5}).
 #' @param eps Stopping criterion. If differences are smaller than \code{eps}, 
 #'            the algorithm halts (Default: \code{1e-10}).
 #' @param truncate Values below \code{truncate} are set to \code{0} (Default: \code{1e-4}).
-#' @param offset Logical indicating whether to include an intercept term (Default: \code{TRUE}).
+#' @param offset Logical indicating whether the data is centered (Default: \code{TRUE}).
 #'
 #' @return A list containing:
 #' \itemize{
-#'  \item \code{betas}: Estimated vector \eqn{\hat{\beta}} from the Weighted Fused LASSO.
-#'  \item \code{tuning_parameters}: Data frame with tuning parameters. The column \code{df} 
-#'        contains the number of non-zero coefficients for the different lambda-values
+#'  \item \code{betas}: A list with estimates. Each entry are the \eqn{\beta}-estimates
+#'        for a specific value of \eqn{\lambda_2}. 
 #'  \item all input variables.
 #' }
 #' 
@@ -47,7 +46,7 @@
 #' result <- wflsa(y, W, lambda1, lambda2)
 #'
 #' @export
-wflsa <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1, 
+wflsa <- function(y, W, lambda2 = c(.1, .2), rho = 1, 
                   max_iter = 1e5, eps = 1e-10, truncate = 1e-4, offset = TRUE) {
   
   # number of variables
@@ -56,11 +55,6 @@ wflsa <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1,
   # Check if dimensions of matrix W match the length of vector y
   if (ncol(W) != p || nrow(W) != p) {
     stop("Error: Dimensions of matrix W must be equal to the length of vector y.")
-  }
-  
-  # Check if lambda1 is a non-empty vector with all positive values
-  if (!is.vector(lambda1) || length(lambda1) == 0 || any(lambda1 <= 0)) {
-    stop("Error: lambda1 must be a non-empty vector with all positive values.")
   }
   
   # Check if lambda2 is a non-empty vector with all positive values
@@ -97,31 +91,41 @@ wflsa <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1,
     y <- y - mean(y)
   }
   
-  # Get all possible combinations and determine the eta1 and eta2 values
-  tuning_parameters <- data.frame(expand.grid(lambda1 = lambda1, lambda2 = lambda2))
-  tuning_parameters$eta1 <- tuning_parameters$lambda1 / rho
-  tuning_parameters$eta2 <- tuning_parameters$lambda2 / rho
+  # Determine the eta2 values
+  eta2 <- lambda2 / rho 
   
   # Determine the value of a such that aI - D'D is positive definite (see paper)
-  a <- wflsa::calculate_diagonal_matrix_A(W, max(tuning_parameters$eta1), max(tuning_parameters$eta2)) + 10
+  a <- wflsa::calculate_diagonal_matrix_A(W, 0, max(eta2)) + 1
   
-  # Calculate the regression coefficients for all combinations of lambda1 and lambda2
-  betas <- lapply(1:nrow(tuning_parameters), function(i) {
-    eta1 <- tuning_parameters$eta1[i]
-    eta2 <- tuning_parameters$eta2[i]
-    genlassoRcpp(y, W, p, eta1, eta2, a, rho, max_iter, eps, truncate)
+  # Calculate the regression coefficients for the different lambda2
+  # Note that lambda1 = 0, since we can determine the values for lambda1 later 
+  # through soft thresholding
+  betas <- lapply(eta2, function(eta2) {
+    genlassoRcpp(y, W, p, 0, eta2, a, rho, max_iter, eps, truncate)
   })
   
-  # determine number of covariates not equal to zero
-  df <- sapply(betas, function(beta) sum(beta != 0))
+  # Determine the values of lambda1 for which at least one coefficient switches to non-zero
+  lambda1 <- lapply(betas, function(beta) c(0, wflsa::get_unique_values(beta, digits = 7)))
+  
+  # Determine the number of breakpoints
+  n_lambda1 <- sapply(lambda1, function(breaks) length(breaks))
+  
+  # Determine the beta estimates for each breakpoint for each value of lambda2
+  betas <- lapply(1:length(betas), function(i) {
+    beta <- betas[[i]]
+    
+    # apply the soft thresholding to determine the estimate for a given lambda1 value
+    lapply(lambda1[[i]], function(breakpoint) {
+      wflsa::soft_threshold(beta, breakpoint + 1e-7)
+    })
+  })
   
   result <- list(
     betas = betas,
-    tuning_parameters = tuning_parameters,
-    df = df,
+    lambda1 = lambda1, 
+    n_lambda1 = n_lambda1, 
     y = y,
     W = W,
-    lambda1 = lambda1,
     lambda2 = lambda2,
     rho = rho,
     max_iter = max_iter,
@@ -146,48 +150,40 @@ wflsa <- function(y, W, lambda1 = c(0.1), lambda2 = c(0.1), rho = 1,
 #' @export
 print.wflsa.fit <- function(fit, ...) { 
   
-  # Number of lambda pairs: 
-  n_lambda_pairs <- length(fit$lambda1) * length(fit$lambda2)
   p <- length(fit$y) 
   
-  cat(sprintf("Weighted Fused LASSO Signal Approximator\n\n"))
+  cat(sprintf("Fit for the Weighted Fused LASSO Signal Approximator\n\n"))
   
   # Print the number of variables (p) and the number of lambda pairs
-  cat(sprintf("Number of variables (p) : %d\n", p))
-  cat(sprintf("Number of lambda pairs  : %d\n\n", n_lambda_pairs))
-  
-  # Print the header for the estimated beta coefficients
-  cat("Estimated beta coefficients \n")
-  
-  # Loop over the lambda pairs (n_lambda_pairs) - stopping after the first 5 pairs
-  for (i in 1:min(n_lambda_pairs, 5)) {
-    
-    # Print the lambda pair values
-    cat(sprintf("(%.2f, %.2f):\t", fit$tuning_parameters[i, 'lambda1'],
-                fit$tuning_parameters[i, 'lambda2']))
-    
-    # Loop over the entries in each beta vector (p) - stopping after the first 8 entries
-    for (j in 1:min(p, 8)) {
-      # Print each beta value with two digits after the comma, separated by tabs
-      cat(sprintf("%.2f\t", fit$betas[[i]][j]))
-    }
-    
-    # If there are more than 8 entries, print dots (...) to indicate additional entries
-    if (p > 8) { 
-      cat("...") 
-    }
-    
-    # Move to the next line after printing each beta vector
-    cat("\n")
-  }
-  
-  # If there are more than 5 lambda pairs, print dots (...) to indicate additional pairs
-  if (n_lambda_pairs > 5) {
-    cat("...\n") 
-  }
-  
-  # Print the number of non-zero coefficients
-  cat('\nNumber of non-zero coefficients:\n')
-  cat(fit$df)
-  cat('\n')
+  cat(sprintf("Number of variables (p)  : %d\n", p))
+  cat(sprintf("Number of lambda2 values : %d\n", length(fit$lambda2)))
 }
+
+
+#' Get Estimates for Beta Coefficients for a Given Lambda1 Value
+#'
+#' This function takes the resulting fit from the wflsa function and returns the
+#' estimates for the beta coefficients for all lambda2 values that were considered
+#' before.
+#'
+#' @param fit The result object obtained from wflsa function
+#' @param lambda1 The lambda1 value for which beta coefficients are needed
+#' @return A list containing:
+#'   \item{betas}{Matrix of beta coefficients for each lambda2 value. Each row corresponds to a single lambda2 value}
+#'   \item{lambda2}{Vector of lambda2 values considered in the fit.}
+#' @export
+#' @examples
+#' # Example usage:
+#' # fit <- wflsa(data, lambda1_values, lambda2_values)
+#' # estimate <- get_estimate_lambda1(fit, lambda1_value)
+#' # Now you can access estimated beta coefficients for different lambda2 values
+get_estimate_lambda1 <- function(fit, lambda1) {
+  
+  betas <- lapply(fit$betas, function(est) wflsa::soft_threshold(est[[1]], lambda1))
+  
+  list(
+    betas = t(sapply(betas, function(x) x)), # turn into a matrix
+    lambda2 = fit$lambda2
+  )
+}
+

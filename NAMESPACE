@@ -2,6 +2,9 @@
 
 S3method(print,wflsa.fit)
 export(calculate_diagonal_matrix_A)
+export(get_estimate_lambda1)
+export(get_unique_values)
+export(soft_threshold)
 export(wflsa)
 import(Rcpp)
 useDynLib(wflsa)
