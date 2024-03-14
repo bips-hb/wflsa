@@ -41,10 +41,9 @@
 #' # Example usage of the wflsa function
 #' y <- c(1, 2, 3)
 #' W <- matrix(c(1, 0, 0, 0, 1, 0, 0, 0, 1), ncol = 3)
-#' lambda1 <- c(0.1, 0.2)
 #' lambda2 <- c(0.1, 0.2)
-#' result <- wflsa(y, W, lambda1, lambda2)
-#'
+#' result <- wflsa::wflsa(y, W, lambda2)
+#' wflsa::get_estimate_lambda1(result, lambda1 = .5)
 #' @export
 wflsa <- function(y, W, lambda2 = c(.1, .2), rho = 1, 
                   max_iter = 1e5, eps = 1e-10, truncate = 1e-4, offset = TRUE) {
