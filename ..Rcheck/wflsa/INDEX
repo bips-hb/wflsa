@@ -1,0 +1,11 @@
+calculate_diagonal_matrix_A
+                        Determine the Diagonal of Matrix A
+get_estimate_lambda1    Get Estimates for Beta Coefficients for a Given
+                        Lambda1 Value
+get_unique_values       Get unique absolute values of a vector after
+                        rounding
+print.wflsa.fit         Print Function for the Weighted Fused LASSO
+                        Signal Approximator (wFLSA) fit object
+soft_threshold          Apply soft thresholding to a numeric vector
+wflsa                   The Weighted Fused Lasso Signal Approximator
+                        (wFLSA) Algorithm

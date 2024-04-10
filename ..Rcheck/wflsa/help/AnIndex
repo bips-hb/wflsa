@@ -1,0 +1,6 @@
+calculate_diagonal_matrix_A	calculate_diagonal_matrix_A
+get_estimate_lambda1	get_estimate_lambda1
+get_unique_values	get_unique_values
+print.wflsa.fit	print.wflsa.fit
+soft_threshold	soft_threshold
+wflsa	wflsa

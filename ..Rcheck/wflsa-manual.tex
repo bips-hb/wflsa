@@ -1,0 +1,300 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `wflsa'}}
+\par\bigskip{\large \today}
+\end{center}
+\inputencoding{utf8}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {wflsa: Weighted Fused LASSO Signal Approximator (wFLSA)}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Weighted Fused LASSO Signal Approximator (wFLSA)}
+\item[Version]\AsIs{1.2}
+\item[Date]\AsIs{2024-10-01}
+\item[Author]\AsIs{Louis Dijkstra [aut, cre]}
+\item[Maintainer]\AsIs{Louis Dijkstra }\email{dijkstra@leibniz-bips.de}\AsIs{}
+\item[Description]\AsIs{A package for computing the 
+Weighted Fused LASSO Signal Approximator (wFLSA)}
+\item[Imports]\AsIs{}
+\item[Depends]\AsIs{R (>= 4.0.2), Rcpp}
+\item[LinkingTo]\AsIs{Rcpp}
+\item[License]\AsIs{GPL-3}
+\item[Encoding]\AsIs{UTF-8}
+\item[LazyData]\AsIs{true}
+\item[RoxygenNote]\AsIs{7.2.3}
+\item[URL]\AsIs{}\url{https://github.com/bips-hb/wflsa}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/bips-hb/wflsa/issues}\AsIs{}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{calculate\_diagonal\_matrix\_A}{Determine the Diagonal of Matrix \eqn{A}{}}{calculate.Rul.diagonal.Rul.matrix.Rul.A}
+%
+\begin{Description}\relax
+The wFLSA algorithm requires the choice of a matrix \eqn{A}{} such that 
+\eqn{A - D'D}{} is positive semidefinite.  
+We choose the matrix \eqn{A}{} to be diagonal with a fixed value \eqn{a}{}. 
+This function determines the smallest value of \eqn{a}{} such that 
+\eqn{A - D'D}{} is indeed positive semidefinite. We do this be determining 
+the largest eigenvalue
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+calculate_diagonal_matrix_A(W, eta1, eta2)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{W}] Weight matrix \eqn{W}{}
+
+\item[\code{eta1, eta2}] The values \eqn{\eta_1 = \lambda_1 / \rho}{} and 
+\eqn{\eta_2 = \lambda_2 / \rho}{}
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Value of \eqn{a}{}
+\end{Value}
+%
+\begin{References}\relax
+Zhu, Y. (2017). An Augmented ADMM Algorithm With Application to the 
+Generalized Lasso Problem. Journal of Computational and Graphical Statistics, 
+26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
+\end{References}
+\inputencoding{utf8}
+\HeaderA{get\_estimate\_lambda1}{Get Estimates for Beta Coefficients for a Given Lambda1 Value}{get.Rul.estimate.Rul.lambda1}
+%
+\begin{Description}\relax
+This function takes the resulting fit from the wflsa function and returns the
+estimates for the beta coefficients for all lambda2 values that were considered
+before.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+get_estimate_lambda1(fit, lambda1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{fit}] The result object obtained from wflsa function
+
+\item[\code{lambda1}] The lambda1 value for which beta coefficients are needed
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list containing:
+\begin{ldescription}
+\item[\code{betas}] Matrix of beta coefficients for each lambda2 value. Each row corresponds to a single lambda2 value
+\item[\code{lambda2}] Vector of lambda2 values considered in the fit.
+\end{ldescription}
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Example usage:
+# fit <- wflsa(data, lambda1_values, lambda2_values)
+# estimate <- get_estimate_lambda1(fit, lambda1_value)
+# Now you can access estimated beta coefficients for different lambda2 values
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{get\_unique\_values}{Get unique absolute values of a vector after rounding}{get.Rul.unique.Rul.values}
+%
+\begin{Description}\relax
+This function takes a numeric vector, calculates its absolute values,
+rounds them to a specified number of digits, finds the unique values,
+sorts them, and returns the sorted unique absolute values.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+get_unique_values(vector, digits = 10)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{vector}] A numeric vector.
+
+\item[\code{digits}] Number of digits to round to (default is 10).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector containing the sorted unique absolute values.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+vector <- c(1.23456789, -1.23456788, 1.23456787, -1.23456786, 1.23456785, -1.23456784)
+sorted_unique_abs_vals <- get_sorted_unique_abs_values(vector)
+print(sorted_unique_abs_vals)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{print.wflsa.fit}{Print Function for the Weighted Fused LASSO Signal Approximator (wFLSA) fit object}{print.wflsa.fit}
+%
+\begin{Description}\relax
+This function prints information about the fitted wFLSA object, including the 
+number of variables, the number of lambda pairs, and the estimated beta coefficients.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'wflsa.fit'
+print(fit, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{fit}] An object of class wflsa.fit.
+
+\item[\code{...}] Additional arguments to be passed to the print function.
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{soft\_threshold}{Apply soft thresholding to a numeric vector}{soft.Rul.threshold}
+%
+\begin{Description}\relax
+This function applies soft thresholding to each element of a numeric vector
+using a specified threshold value (\code{lambda1}). Soft thresholding shrinks
+values toward zero by applying a penalty when the absolute value of an element
+exceeds the threshold.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+soft_threshold(x, lambda1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A numeric vector.
+
+\item[\code{lambda1}] Threshold value for soft thresholding.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector with each element softened using the specified threshold.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+x <- c(3, -2, 5, -4, 1)
+lambda1 <- 2
+soft_thresholded <- soft_threshold(x, lambda1)
+print(soft_thresholded)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{wflsa}{The Weighted Fused Lasso Signal Approximator (wFLSA) Algorithm}{wflsa}
+%
+\begin{Description}\relax
+Solves the weighted Fused LASSO Signal Approximator optimization problem 
+using an ADMM-based approach. The problem is formulated as follows: 
+\deqn{
+\hat{\beta} = \argmin \frac{1}{2} || y - \beta ||_2^2 + \lambda_1 ||\beta ||_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j |  
+}{}
+where:
+\begin{itemize}
+
+\item{} \eqn{y}{} is the response with mean \eqn{0}{}.
+\item{} \eqn{\beta}{} is the vector of coefficients to be estimated.
+\item{} \eqn{|| \cdot ||_1}{} and \eqn{|| \cdot ||_2}{} are the \eqn{L_1}{}- and \eqn{L_2}{}-norms, respectively.
+\item{} \eqn{\lambda_1 > 0}{} is the regularization parameter controlling the strength of the sparsity penalty. 
+\item{} \eqn{\lambda_2 > 0}{} is the regularization parameter controlling the smoothness. 
+\item{} \eqn{w_{ij} \in [0,1]}{} is the weight between the \eqn{i}{}-th and \eqn{j}{}-th coefficient.
+
+\end{itemize}
+
+This implementation solves the entire path for a fixed value of \eqn{\lambda_2}{}.
+
+An Estimator for the Weighted Fused Lasso Signal Approximator (wFLSA)
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+wflsa(
+  y,
+  W,
+  lambda2 = c(0.1, 0.2),
+  rho = 1,
+  max_iter = 1e+05,
+  eps = 1e-10,
+  truncate = 1e-04,
+  offset = TRUE
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{y}] Vector of length \eqn{p}{} representing the response variable (assumed to be centered).
+
+\item[\code{W}] Weight matrix of dimensions \eqn{p \times p}{}.
+
+\item[\code{lambda2}] Vector of positive regularization parameters for smoothness penalty (Default: \code{(.1, .2)})
+
+\item[\code{rho}] ADMM's parameter (Default: \code{1}).
+
+\item[\code{max\_iter}] Maximum number of iterations (Default: \code{1e5}).
+
+\item[\code{eps}] Stopping criterion. If differences are smaller than \code{eps}, 
+the algorithm halts (Default: \code{1e-10}).
+
+\item[\code{truncate}] Values below \code{truncate} are set to \code{0} (Default: \code{1e-4}).
+
+\item[\code{offset}] Logical indicating whether the data is centered (Default: \code{TRUE}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list containing:
+\begin{itemize}
+
+\item{} \code{betas}: A list with estimates. Each entry are the \eqn{\beta}{}-estimates
+for a specific value of \eqn{\lambda_2}{}. 
+\item{} all input variables.
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Note}\relax
+\strong{Important Note:} The algorithm assumes \eqn{y}{} to be centered, i.e., its mean is 0.
+\end{Note}
+%
+\begin{Author}\relax
+Louis Dijkstra
+\end{Author}
+%
+\begin{SeeAlso}\relax
+\code{\LinkA{genlassoRcpp}{genlassoRcpp}}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Example usage of the wflsa function
+y <- c(1, 2, 3)
+W <- matrix(c(1, 0, 0, 0, 1, 0, 0, 0, 1), ncol = 3)
+lambda2 <- c(0.1, 0.2)
+result <- wflsa::wflsa(y, W, lambda2)
+wflsa::get_estimate_lambda1(result, lambda1 = .5)
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}
