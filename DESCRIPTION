@@ -7,7 +7,7 @@ Author: Louis Dijkstra [aut, cre]
 Maintainer: Louis Dijkstra <dijkstra@leibniz-bips.de>
 Description: A package for computing the Weighted Fused LASSO Signal
     Approximator (wFLSA)
-License: GPL-3
+License: GPL (>= 3)
 URL: https://github.com/bips-hb/wflsa
 BugReports: https://github.com/bips-hb/wflsa/issues
 Depends: 
