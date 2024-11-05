@@ -88,7 +88,7 @@ using namespace Rcpp;
    }
 
    /* Indices used for the alpha-update step */
-   int steps[m-1] ;
+   int* steps = new int[m - 1] ;
 
    *steps = 0 ;
 
@@ -208,6 +208,7 @@ using namespace Rcpp;
    delete[] alpha;
    delete[] y;
    delete[] beta_new ;
+   delete[] steps;
 
    return(res);
  }
