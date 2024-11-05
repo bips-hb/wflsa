@@ -1,6 +1,6 @@
 Package: wflsa
 Title: Weighted Fused LASSO Signal Approximator (wFLSA)
-Version: 1.2
+Version: 1.2.1
 Authors@R: 
     person("Louis", "Dijkstra", , "dijkstra@leibniz-bips.de", role = c("aut", "cre"))
 Author: Louis Dijkstra [aut, cre]
