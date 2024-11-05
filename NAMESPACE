@@ -3,5 +3,5 @@
 S3method(print,wflsa.fit)
 export(calculate_diagonal_matrix_A)
 export(wflsa)
-import(Rcpp)
-useDynLib(wflsa)
+importFrom(Rcpp,sourceCpp)
+useDynLib(wflsa, .registration = TRUE)
