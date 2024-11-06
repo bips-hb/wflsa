@@ -29,7 +29,7 @@ wflsa(
 
 \item{max_iter}{Maximum number of iterations (Default: \code{1e5}).}
 
-\item{eps}{Stopping criterion. If differences are smaller than \code{eps}, 
+\item{eps}{Stopping criterion. If differences are smaller than \code{eps},
 the algorithm halts (Default: \code{1e-10}).}
 
 \item{truncate}{Values below \code{truncate} are set to \code{0} (Default: \code{1e-4}).}
@@ -39,26 +39,26 @@ the algorithm halts (Default: \code{1e-10}).}
 \value{
 A list containing:
 \itemize{
- \item \code{betas}: Estimated vector \eqn{\hat{\beta}} from the Weighted Fused LASSO.
- \item \code{tuning_parameters}: Data frame with tuning parameters. The column \code{df} 
-       contains the number of non-zero coefficients for the different lambda-values
- \item all input variables.
+\item \code{betas}: Estimated vector \eqn{\hat{\beta}} from the Weighted Fused LASSO.
+\item \code{tuning_parameters}: Data frame with tuning parameters. The column \code{df}
+contains the number of non-zero coefficients for the different lambda-values
+\item all input variables.
 }
 }
 \description{
-Solves the weighted Fused LASSO Signal Approximator optimization problem 
-using an ADMM-based approach. The problem is formulated as follows: 
+Solves the weighted Fused LASSO Signal Approximator optimization problem
+using an ADMM-based approach. The problem is formulated as follows:
 \deqn{
-\hat{\beta} = \argmin \frac{1}{2} || y - \beta ||_2^2 + \lambda_1 ||\beta ||_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j |  
+\hat{\beta} = \argmin \frac{1}{2} || y - \beta ||_2^2 + \lambda_1 ||\beta ||_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j |
 }
 where:
 \itemize{
- \item \eqn{y} is the response with mean \eqn{0}.
- \item \eqn{\beta} is the vector of coefficients to be estimated.
- \item \eqn{|| \cdot ||_1} and \eqn{|| \cdot ||_2} are the \eqn{L_1}- and \eqn{L_2}-norms, respectively.
- \item \eqn{\lambda_1 > 0} is the regularization parameter controlling the strength of the sparsity penalty. 
- \item \eqn{\lambda_2 > 0} is the regularization parameter controlling the smoothness. 
- \item \eqn{w_{ij} \in [0,1]} is the weight between the \eqn{i}-th and \eqn{j}-th coefficient.
+\item \eqn{y} is the response with mean \eqn{0}.
+\item \eqn{\beta} is the vector of coefficients to be estimated.
+\item \eqn{|| \cdot ||_1} and \eqn{|| \cdot ||_2} are the \eqn{L_1}- and \eqn{L_2}-norms, respectively.
+\item \eqn{\lambda_1 > 0} is the regularization parameter controlling the strength of the sparsity penalty.
+\item \eqn{\lambda_2 > 0} is the regularization parameter controlling the smoothness.
+\item \eqn{w_{ij} \in [0,1]} is the weight between the \eqn{i}-th and \eqn{j}-th coefficient.
 }
 }
 \note{
@@ -74,5 +74,5 @@ result <- wflsa(y, W, lambda1, lambda2)
 
 }
 \seealso{
-\code{\link{genlassoRcpp}}
+\code{\link[=genlassoRcpp]{genlassoRcpp()}}
 }

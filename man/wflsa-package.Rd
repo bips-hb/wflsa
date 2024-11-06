@@ -3,9 +3,9 @@
 \docType{package}
 \name{wflsa-package}
 \alias{wflsa-package}
-\title{wflsa: Weighted Fused LASSO Signal Approximator (wFLSA)}
+\title{wflsa: Weighted Fused LASSO Signal Approximator ('wFLSA')}
 \description{
-A package for computing the Weighted Fused LASSO Signal Approximator (wFLSA)
+A package for computing the Weighted Fused LASSO Signal Approximator (wFLSA).
 }
 \seealso{
 Useful links:

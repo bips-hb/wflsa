@@ -4,14 +4,14 @@
 \alias{print.wflsa.fit}
 \title{Print Function for the Weighted Fused LASSO Signal Approximator (wFLSA) fit object}
 \usage{
-\method{print}{wflsa.fit}(fit, ...)
+\method{print}{wflsa.fit}(x, ...)
 }
 \arguments{
-\item{fit}{An object of class wflsa.fit.}
+\item{x}{An object of class wflsa.fit.}
 
 \item{...}{Additional arguments to be passed to the print function.}
 }
 \description{
-This function prints information about the fitted wFLSA object, including the 
+This function prints information about the fitted wFLSA object, including the
 number of variables, the number of lambda pairs, and the estimated beta coefficients.
 }

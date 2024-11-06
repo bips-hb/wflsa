@@ -7,6 +7,8 @@
 genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 }
 \arguments{
+\item{Y}{The \eqn{y} vector of length \eqn{m}}
+
 \item{W}{The weight matrix \eqn{W} of dimensions \eqn{m x m}}
 
 \item{m}{The number of graphs}
@@ -17,7 +19,7 @@ genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 
 \item{a}{Value added to the diagonal of \eqn{-D'D} so that
 the matrix is positive definite, see
-\code{\link{matrix_A_inner_ADMM}}}
+\code{\link[CVN:matrix_A_inner_ADMM]{CVN::matrix_A_inner_ADMM()}}}
 
 \item{rho}{The ADMM's parameter}
 
@@ -29,8 +31,6 @@ is halted}
 
 \item{truncate}{Values below \code{truncate} are
 set to \code{0}}
-
-\item{y}{The \eqn{y} vector of length \eqn{m}}
 }
 \value{
 The estimated vector \eqn{\hat{\beta}}
@@ -49,7 +49,4 @@ algorithm presented in Zhu (2017).
 Zhu, Y. (2017). An Augmented ADMM Algorithm With Application to the
 Generalized Lasso Problem. Journal of Computational and Graphical Statistics,
 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
-}
-\seealso{
-\code{\link{genlasso_wrapper}}
 }
