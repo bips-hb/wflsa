@@ -22,9 +22,9 @@ pak::pak("bips-hb/wflsa")
 
 The problem solved by the wFLSA algorithm is formulated as follows:
 
-``` math
+$$
 \hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 \| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right) 
-```
+$$
 
 Where: - $y$ is the response variable with mean 0. - $\beta$ is the
 vector of coefficients to be estimated. - $|| \cdot ||_1$ and
