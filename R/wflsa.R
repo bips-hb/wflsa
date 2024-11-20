@@ -3,7 +3,7 @@
 #' Solves the weighted Fused LASSO Signal Approximator optimization problem
 #' using an ADMM-based approach. The problem is formulated as follows:
 #' \deqn{
-#' \hat{\beta} = \argmin \frac{1}{2} || y - \beta ||_2^2 + \lambda_1 ||\beta ||_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j |
+#' \hat{\beta} = \operatorname{argmin} \frac{1}{2} || y - \beta ||_2^2 + \lambda_1 ||\beta ||_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j |
 #' }
 #' where:
 #' \itemize{

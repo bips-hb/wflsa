@@ -19,7 +19,7 @@ genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 
 \item{a}{Value added to the diagonal of \eqn{-D'D} so that
 the matrix is positive definite, see
-\code{\link[CVN:matrix_A_inner_ADMM]{CVN::matrix_A_inner_ADMM()}}}
+\code{\link{matrix_A_inner_ADMM}}}
 
 \item{rho}{The ADMM's parameter}
 
@@ -38,7 +38,7 @@ The estimated vector \eqn{\hat{\beta}}
 \description{
 Solves efficiently the generalized LASSO problem of the form
 \deqn{
-  \hat{\beta} = \text{argmin } \frac{1}{2} || y - \beta ||_2^2 + ||D\beta||_1
+  \hat{\beta} = \oepratorname{argmin} \frac{1}{2} || y - \beta ||_2^2 + ||D\beta||_1
 }
 where \eqn{\beta} and \eqn{y} are \eqn{m}-dimensional vectors and
 \eqn{D} is a \eqn{(c \times m)}-matrix where \eqn{c \geq m}.
@@ -49,4 +49,7 @@ algorithm presented in Zhu (2017).
 Zhu, Y. (2017). An Augmented ADMM Algorithm With Application to the
 Generalized Lasso Problem. Journal of Computational and Graphical Statistics,
 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
+}
+\seealso{
+\code{\link{genlasso_wrapper}}
 }
