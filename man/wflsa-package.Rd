@@ -11,6 +11,7 @@ A package for computing the Weighted Fused LASSO Signal Approximator (wFLSA).
 Useful links:
 \itemize{
   \item \url{https://github.com/bips-hb/wflsa}
+  \item \url{https://bips-hb.github.io/wflsa/}
   \item Report bugs at \url{https://github.com/bips-hb/wflsa/issues}
 }
 
