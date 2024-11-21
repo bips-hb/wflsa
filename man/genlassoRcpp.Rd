@@ -9,7 +9,7 @@ genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 \arguments{
 \item{Y}{The \eqn{y} vector of length \eqn{m}}
 
-\item{W}{The weight matrix \eqn{W} of dimensions \eqn{m x m}}
+\item{W}{The weight matrix \eqn{W} of dimensions \eqn{m \times m}}
 
 \item{m}{The number of graphs}
 
@@ -18,8 +18,7 @@ genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 \item{eta2}{Equals \eqn{\lambda_2 / rho}}
 
 \item{a}{Value added to the diagonal of \eqn{-D'D} so that
-the matrix is positive definite, see
-\code{\link{matrix_A_inner_ADMM}}}
+the matrix is positive definite, see \code{\link[CVN:matrix_A_inner_ADMM]{CVN::matrix_A_inner_ADMM()}}}
 
 \item{rho}{The ADMM's parameter}
 
@@ -51,5 +50,5 @@ Generalized Lasso Problem. Journal of Computational and Graphical Statistics,
 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
 }
 \seealso{
-\code{\link{genlasso_wrapper}}
+genlasso_wrapper
 }
