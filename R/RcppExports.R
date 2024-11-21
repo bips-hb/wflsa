@@ -18,7 +18,7 @@
 #' @param eta1 Equals \eqn{\lambda_1 / rho}
 #' @param eta2 Equals \eqn{\lambda_2 / rho}
 #' @param a Value added to the diagonal of \eqn{-D'D} so that
-#'          the matrix is positive definite, see [CVN::matrix_A_inner_ADMM()]
+#'          the matrix is positive definite, see `matrix_A_inner_ADMM` in package `CVN`
 #' @param rho The ADMM's parameter
 #' @param max_iter Maximum number of iterations
 #' @param eps Stopping criterion. If differences
@@ -34,7 +34,6 @@
 #' Generalized Lasso Problem. Journal of Computational and Graphical Statistics,
 #' 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
 #'
-#' @seealso genlasso_wrapper
 genlassoRcpp <- function(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate) {
     .Call(`_wflsa_genlassoRcpp`, Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 }

@@ -18,7 +18,7 @@ genlassoRcpp(Y, W, m, eta1, eta2, a, rho, max_iter, eps, truncate)
 \item{eta2}{Equals \eqn{\lambda_2 / rho}}
 
 \item{a}{Value added to the diagonal of \eqn{-D'D} so that
-the matrix is positive definite, see \code{\link[CVN:matrix_A_inner_ADMM]{CVN::matrix_A_inner_ADMM()}}}
+the matrix is positive definite, see \code{matrix_A_inner_ADMM} in package \code{CVN}}
 
 \item{rho}{The ADMM's parameter}
 
@@ -48,7 +48,4 @@ algorithm presented in Zhu (2017).
 Zhu, Y. (2017). An Augmented ADMM Algorithm With Application to the
 Generalized Lasso Problem. Journal of Computational and Graphical Statistics,
 26(1), 195–204. https://doi.org/10.1080/10618600.2015.1114491
-}
-\seealso{
-genlasso_wrapper
 }
