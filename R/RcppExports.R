@@ -5,7 +5,7 @@
 #'
 #' Solves efficiently the generalized LASSO problem of the form
 #' \deqn{
-#'   \hat{\beta} = \oepratorname{argmin} \frac{1}{2} || y - \beta ||_2^2 + ||D\beta||_1
+#'   \hat{\beta} = \operatorname{argmin} \frac{1}{2} || y - \beta ||_2^2 + ||D\beta||_1
 #' }
 #' where \eqn{\beta} and \eqn{y} are \eqn{m}-dimensional vectors and
 #' \eqn{D} is a \eqn{(c \times m)}-matrix where \eqn{c \geq m}.
