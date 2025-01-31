@@ -22,17 +22,29 @@ pak::pak("bips-hb/wflsa")
 
 The problem solved by the wFLSA algorithm is formulated as follows:
 
-$$
-\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 \| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right) 
-$$
+![\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \\ y - \beta \\\_2^2 + \lambda_1 \\ \beta \\\_1 + \lambda_2 \sum\_{i \< j} w\_{ij} \| \beta_i - \beta_j \| \right)](https://latex.codecogs.com/png.latex?%5Chat%7B%5Cbeta%7D%20%3D%20%5Cunderset%7B%5Cbeta%7D%7B%5Carg%5Cmin%7D%20%5Cleft%28%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20y%20-%20%5Cbeta%20%5C%7C_2%5E2%20%2B%20%5Clambda_1%20%5C%7C%20%5Cbeta%20%5C%7C_1%20%2B%20%5Clambda_2%20%5Csum_%7Bi%20%3C%20j%7D%20w_%7Bij%7D%20%7C%20%5Cbeta_i%20-%20%5Cbeta_j%20%7C%20%5Cright%29 "\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 \| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right)")
 
-Where: - $y$ is the response variable with mean 0. - $\beta$ is the
-vector of coefficients to be estimated. - $|| \cdot ||_1$ and
-$|| \cdot ||_2$ are the $L_1$- and $L_2$-norms, respectively. -
-$\lambda_1 > 0$ is the regularization parameter controlling the strength
-of the sparsity penalty. - $\lambda_2 > 0$ is the regularization
-parameter controlling the smoothness. - $w_{ij} \in [0,1]$ is the weight
-between the $i$-th and $j$-th coefficient.
+Where:
+
+- ![y](https://latex.codecogs.com/png.latex?y "y") is the response
+  variable with mean 0.
+- ![\beta](https://latex.codecogs.com/png.latex?%5Cbeta "\beta") is the
+  vector of coefficients to be estimated.
+- ![\|\| \cdot \|\|\_1](https://latex.codecogs.com/png.latex?%7C%7C%20%5Ccdot%20%7C%7C_1 "|| \cdot ||_1")
+  and
+  ![\|\| \cdot \|\|\_2](https://latex.codecogs.com/png.latex?%7C%7C%20%5Ccdot%20%7C%7C_2 "|| \cdot ||_2")
+  are the ![L_1](https://latex.codecogs.com/png.latex?L_1 "L_1")- and
+  ![L_2](https://latex.codecogs.com/png.latex?L_2 "L_2")-norms,
+  respectively.
+- ![\lambda_1 \> 0](https://latex.codecogs.com/png.latex?%5Clambda_1%20%3E%200 "\lambda_1 > 0")
+  is the regularization parameter controlling the strength of the
+  sparsity penalty.
+- ![\lambda_2 \> 0](https://latex.codecogs.com/png.latex?%5Clambda_2%20%3E%200 "\lambda_2 > 0")
+  is the regularization parameter controlling the smoothness.
+- ![w\_{ij} \in \[0,1\]](https://latex.codecogs.com/png.latex?w_%7Bij%7D%20%5Cin%20%5B0%2C1%5D "w_{ij} \in [0,1]")
+  is the weight between the
+  ![i](https://latex.codecogs.com/png.latex?i "i")-th and
+  ![j](https://latex.codecogs.com/png.latex?j "j")-th coefficient.
 
 ## Example Use
 

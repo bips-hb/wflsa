@@ -1,5 +1,7 @@
 ---
-output: github_document
+output:
+  github_document:
+    pandoc_args: --webtex
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -36,6 +38,7 @@ $$
 $$
 
 Where:
+
 - $y$ is the response variable with mean 0.
 - $\beta$ is the vector of coefficients to be estimated.
 - $|| \cdot ||_1$ and $|| \cdot ||_2$ are the $L_1$- and $L_2$-norms, respectively.
