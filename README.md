@@ -149,9 +149,22 @@ ggplot2::ggplot(data) +
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-## Contact
+## Reference
+
+*Louis Dijkstra, Moritz Hanke, Niklas Koenen, Ronja Foraita* (2024)\
+**An Alternating Direction Method of Multipliers Algorithm for the Weighted Fused LASSO Signal Approximator**
+[https://arxiv.org/abs/2407.18077](https://arxiv.org/abs/2407.18077)
+
+## Acknowledgement
+
+DFG - Deutsche Forschungsgemeinschaft (FO 1045/2-1)
+
+## Author
 
 Louis Dijkstra
 
-Leibniz Institute for Prevention Research & Epidemiology E-mail:
-dijkstra (at) leibniz-bips.de
+## Contact
+
+Ronja Foraita\
+Leibniz Institute for Prevention Research & Epidemiology\
+E-mail: R (at) leibniz-bips.de
