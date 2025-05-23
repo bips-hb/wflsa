@@ -1,7 +1,13 @@
 ---
+title: "Covariate-Varying Networks"
+author: "Louis Dijkstra"
+date: "`r Sys.Date()`"
 output:
   github_document:
-    pandoc_args: --webtex
+    pandoc_args: ["--webtex"]
+    toc: true
+    toc_depth: 2
+    html_preview: false
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -34,7 +40,8 @@ pak::pak("bips-hb/wflsa")
 The problem solved by the wFLSA algorithm is formulated as follows:
 
 $$
-\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 \| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right) 
+\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 
+\| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right) 
 $$
 
 Where:
@@ -132,9 +139,6 @@ ggplot2::ggplot(data) +
   ggtitle("Raw data (blue) and fitted values (red)")
 ```
 
-## Contact
+## Acknowledgment
+DFG - Deutsche Forschungsgemeinschaft (FO 1045/2-1)
 
-Louis Dijkstra
-
-Leibniz Institute for Prevention Research & Epidemiology
-E-mail: dijkstra (at) leibniz-bips.de

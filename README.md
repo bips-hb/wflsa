@@ -1,3 +1,14 @@
+Covariate-Varying Networks
+================
+Louis Dijkstra
+2025-05-23
+
+- [`wflsa`: Weighted Fused LASSO Signal
+  Approximator](#wflsa-weighted-fused-lasso-signal-approximator)
+  - [Installation](#installation)
+  - [Problem Formulation](#problem-formulation)
+  - [Example Use](#example-use)
+  - [Acknowledgment](#acknowledgment)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -22,7 +33,9 @@ pak::pak("bips-hb/wflsa")
 
 The problem solved by the wFLSA algorithm is formulated as follows:
 
-![\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \\ y - \beta \\\_2^2 + \lambda_1 \\ \beta \\\_1 + \lambda_2 \sum\_{i \< j} w\_{ij} \| \beta_i - \beta_j \| \right)](https://latex.codecogs.com/png.latex?%5Chat%7B%5Cbeta%7D%20%3D%20%5Cunderset%7B%5Cbeta%7D%7B%5Carg%5Cmin%7D%20%5Cleft%28%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20y%20-%20%5Cbeta%20%5C%7C_2%5E2%20%2B%20%5Clambda_1%20%5C%7C%20%5Cbeta%20%5C%7C_1%20%2B%20%5Clambda_2%20%5Csum_%7Bi%20%3C%20j%7D%20w_%7Bij%7D%20%7C%20%5Cbeta_i%20-%20%5Cbeta_j%20%7C%20%5Cright%29 "\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 \| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right)")
+![\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \\ y - \beta \\\_2^2 + \lambda_1 
+\\ \beta \\\_1 + \lambda_2 \sum\_{i \< j} w\_{ij} \| \beta_i - \beta_j \| \right)](https://latex.codecogs.com/png.latex?%5Chat%7B%5Cbeta%7D%20%3D%20%5Cunderset%7B%5Cbeta%7D%7B%5Carg%5Cmin%7D%20%5Cleft%28%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20y%20-%20%5Cbeta%20%5C%7C_2%5E2%20%2B%20%5Clambda_1%20%0A%5C%7C%20%5Cbeta%20%5C%7C_1%20%2B%20%5Clambda_2%20%5Csum_%7Bi%20%3C%20j%7D%20w_%7Bij%7D%20%7C%20%5Cbeta_i%20-%20%5Cbeta_j%20%7C%20%5Cright%29 "\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} \| y - \beta \|_2^2 + \lambda_1 
+\| \beta \|_1 + \lambda_2 \sum_{i < j} w_{ij} | \beta_i - \beta_j | \right)")
 
 Where:
 
@@ -91,7 +104,9 @@ A more involved exaples:
 
 ``` r
 library(flsa)
+#> Warning: Paket 'flsa' wurde unter R Version 4.4.3 erstellt
 library(ggplot2)
+#> Warning: Paket 'ggplot2' wurde unter R Version 4.4.3 erstellt
 
 # number of parameters. NOTE: is fixed here
 p <- 100
@@ -149,22 +164,6 @@ ggplot2::ggplot(data) +
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-## Reference
-
-*Louis Dijkstra, Moritz Hanke, Niklas Koenen, Ronja Foraita* (2024)\
-**An Alternating Direction Method of Multipliers Algorithm for the Weighted Fused LASSO Signal Approximator**
-[https://arxiv.org/abs/2407.18077](https://arxiv.org/abs/2407.18077)
-
-## Acknowledgement
+## Acknowledgment
 
 DFG - Deutsche Forschungsgemeinschaft (FO 1045/2-1)
-
-## Author
-
-Louis Dijkstra
-
-## Contact
-
-Ronja Foraita\
-Leibniz Institute for Prevention Research & Epidemiology\
-E-mail: R (at) leibniz-bips.de
