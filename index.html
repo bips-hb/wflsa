@@ -46,9 +46,26 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="wflsa-weighted-fused-lasso-signal-approximator">
-<code>wflsa</code>: Weighted Fused LASSO Signal Approximator<a class="anchor" aria-label="anchor" href="#wflsa-weighted-fused-lasso-signal-approximator"></a>
+<div class="page-header"><h1 id="covariate-varying-networks">Covariate-Varying Networks<a class="anchor" aria-label="anchor" href="#covariate-varying-networks"></a>
 </h1></div>
+<p>Louis Dijkstra 2025-05-23</p>
+<ul>
+<li>
+<a href="#wflsa-weighted-fused-lasso-signal-approximator"><code>wflsa</code>: Weighted Fused LASSO Signal Approximator</a>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#problem-formulation">Problem Formulation</a></li>
+<li><a href="#example-use">Example Use</a></li>
+<li><a href="#acknowledgment">Acknowledgment</a></li>
+</ul>
+</li>
+</ul>
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+</div>
+<div class="section level1">
+<h1 id="wflsa-weighted-fused-lasso-signal-approximator">
+<code>wflsa</code>: Weighted Fused LASSO Signal Approximator<a class="anchor" aria-label="anchor" href="#wflsa-weighted-fused-lasso-signal-approximator"></a>
+</h1>
 <p>The <strong>wflsa</strong> R package provides an efficient implementation of an algorithm for solving the Weighted Fused LASSO Signal Approximator problem. This algorithm is based on an ADMM (Alternating Direction Method of Multipliers) approach and is designed to estimate a vector of coefficients with sparsity and smoothness constraints.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -63,7 +80,7 @@
 </h2>
 <p>The problem solved by the wFLSA algorithm is formulated as follows:</p>
 <div class="float">
-<embed src="https://latex.codecogs.com/png.latex?%5Chat%7B%5Cbeta%7D%20%3D%20%5Cunderset%7B%5Cbeta%7D%7B%5Carg%5Cmin%7D%20%5Cleft%28%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20y%20-%20%5Cbeta%20%5C%7C_2%5E2%20%2B%20%5Clambda_1%20%5C%7C%20%5Cbeta%20%5C%7C_1%20%2B%20%5Clambda_2%20%5Csum_%7Bi%20%3C%20j%7D%20w_%7Bij%7D%20%7C%20%5Cbeta_i%20-%20%5Cbeta_j%20%7C%20%5Cright%29" title="\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} | y - \beta |_2^2 + \lambda_1 | \beta |_1 + \lambda_2 \sum_{i &lt; j} w_{ij} | \beta_i - \beta_j | \right)"></embed><div class="figcaption"> =  (  \ y - \_2^2 + _1 \ \_1 + _2 _{i &lt; j} w_{ij} | _i - _j | )</div>
+<embed src="https://latex.codecogs.com/png.latex?%5Chat%7B%5Cbeta%7D%20%3D%20%5Cunderset%7B%5Cbeta%7D%7B%5Carg%5Cmin%7D%20%5Cleft%28%20%5Cfrac%7B1%7D%7B2%7D%20%5C%7C%20y%20-%20%5Cbeta%20%5C%7C_2%5E2%20%2B%20%5Clambda_1%20%0A%5C%7C%20%5Cbeta%20%5C%7C_1%20%2B%20%5Clambda_2%20%5Csum_%7Bi%20%3C%20j%7D%20w_%7Bij%7D%20%7C%20%5Cbeta_i%20-%20%5Cbeta_j%20%7C%20%5Cright%29" title="\hat{\beta} = \underset{\beta}{\arg\min} \left( \frac{1}{2} | y - \beta |_2^2 + \lambda_1 | \beta |_1 + \lambda_2 \sum_{i &lt; j} w_{ij} | \beta_i - \beta_j | \right)"></embed><div class="figcaption"> =  (  \ y - \_2^2 + _1 \ \_1 + _2 _{i &lt; j} w_{ij} | _i - _j | )</div>
 </div>
 <p>Where:</p>
 <ul>
@@ -123,7 +140,9 @@
 <p>A more involved exaples:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flsa</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Paket 'flsa' wurde unter R Version 4.4.3 erstellt</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Paket 'ggplot2' wurde unter R Version 4.4.3 erstellt</span></span>
 <span></span>
 <span><span class="co"># number of parameters. NOTE: is fixed here</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
@@ -180,28 +199,12 @@
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
-</h2>
-<p><em>Louis Dijkstra, Moritz Hanke, Niklas Koenen, Ronja Foraita</em> (2024)<br><strong>An Alternating Direction Method of Multipliers Algorithm for the Weighted Fused LASSO Signal Approximator</strong> <a href="https://arxiv.org/abs/2407.18077" class="external-link">https://arxiv.org/abs/2407.18077</a></p>
-</div>
-<div class="section level2">
-<h2 id="acknowledgement">Acknowledgement<a class="anchor" aria-label="anchor" href="#acknowledgement"></a>
+<h2 id="acknowledgment">Acknowledgment<a class="anchor" aria-label="anchor" href="#acknowledgment"></a>
 </h2>
 <p>DFG - Deutsche Forschungsgemeinschaft (FO 1045/2-1)</p>
 </div>
-<div class="section level2">
-<h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a>
-</h2>
-<p>Louis Dijkstra</p>
 </div>
-<div class="section level2">
-<h2 id="contact">Contact<a class="anchor" aria-label="anchor" href="#contact"></a>
-</h2>
-<p>Ronja Foraita<br>
-Leibniz Institute for Prevention Research &amp; Epidemiology<br>
-E-mail: R (at) leibniz-bips.de</p>
-</div>
-</div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
