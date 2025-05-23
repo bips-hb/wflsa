@@ -2,14 +2,15 @@ Package: wflsa
 Title: Weighted Fused LASSO Signal Approximator ('wFLSA')
 Version: 1.2.1
 Authors@R: c(
-    person("Louis", "Dijkstra", , "dijkstra@leibniz-bips.de", role = c("aut", "cre")),
-    person("Leibniz Institute for Prevention Research and Epidemiology - BIPS", , , "R@leibniz-bips.de", role = "cph",
-           comment = c(ROR = "02c22vc57"))
+    person("Louis", "Dijkstra", role = "aut",
+           comment = c(ORCID = "0000-0003-1476-6202")),  
+    person("Ronja", "Foraita", , "foraita@leibniz-bips.de", role = c("cre"), 
+           comment = c(ORCID = "0000-0003-2216-6653")),
+    person("Leibniz Institute for Prevention Research and Epidemiology - BIPS", role = c("cph", "fnd"), 
+           comment = c(ROR = "02c22vc57")),
+    person("Deutsche Forschungsgemeinschaft (DFG)", role = "fnd")
   )
-Author: Louis Dijkstra [aut, cre]
-Maintainer: Louis Dijkstra <dijkstra@leibniz-bips.de>
-Description: A package for computing the Weighted Fused LASSO Signal
-    Approximator (wFLSA).
+Description: A package for computing the Weighted Fused LASSO Signal Approximator (wFLSA).
 License: GPL (>= 3)
 URL: https://github.com/bips-hb/wflsa, https://bips-hb.github.io/wflsa/
 BugReports: https://github.com/bips-hb/wflsa/issues

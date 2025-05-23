@@ -17,7 +17,18 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Louis Dijkstra \email{dijkstra@leibniz-bips.de}
+\strong{Maintainer}: Ronja Foraita \email{foraita@leibniz-bips.de} (\href{https://orcid.org/0000-0003-2216-6653}{ORCID})
+
+Authors:
+\itemize{
+  \item Louis Dijkstra (\href{https://orcid.org/0000-0003-1476-6202}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Leibniz Institute for Prevention Research and Epidemiology - BIPS (02c22vc57) [copyright holder, funder]
+  \item Deutsche Forschungsgemeinschaft (DFG) [funder]
+}
 
 }
 \keyword{internal}
